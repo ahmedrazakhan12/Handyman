@@ -1,6 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
+  const [adminData, setAdminData] = useState({});
+  const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
+  const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:5000/user/decodedToken", {
+        headers: { Authorization: token }
+      })
+      .then((res) => {
+        setLoginId(res.data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+ 
+  useEffect(() => {
+    if (loginId) {
+      axios
+        .get("http://localhost:5000/user/adminInfo", {
+          headers: { Authorization: ` ${loginId}` } // Corrected usage of loginId
+        })
+        .then((res) => {
+          setAdminData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loginId]);
+
   return (
     <nav
       className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
@@ -10,7 +46,7 @@ const Navbar = () => {
       <div className="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
          
-          <h6 className="font-weight-bolder mb-0">Dashboard</h6>
+          <h6 className="font-weight-bolder mb-0 "><span className="text-capitalize">{adminData.name}</span>'s {location.pathname === '/profile' ? 'Profile' : ' Dashboard'}</h6>
         </nav>
         <div
           className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"

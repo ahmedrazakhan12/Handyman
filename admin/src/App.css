@@ -1,0 +1,88 @@
+.editProfile .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /* min-height: 100vh; Ensures the form is centered vertically */
+  }
+  
+  .editProfile  .form-horizontal {
+    width: 100%;
+    /* max-width: 800px; Adjust max-width as needed */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .editProfile  .form-flex-container {
+    display: flex;
+    /* flex-wrap: wrap; */
+    gap: 20px; /* Adjust spacing between elements */
+    width: 100%;
+  }
+  
+  .editProfile   .form-flex-item {
+    width: 100%;
+  }
+  
+  .editProfile .panel {
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .editProfile  .panel-body .img-thumbnail {
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* box-flex-group: RED; */
+  }
+  
+  .editProfile  .form-group {
+    margin-bottom: 15px;
+    padding: 0 10px;
+  }
+  
+  .editProfile  .control-label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .editProfile  .form-control {
+    width: 100%;
+    padding: 8px;
+    /* margin-bottom: 10px; */
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .editProfile  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  /* Optional styling */
+  .editProfile  .panel-heading {
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .editProfile  .checkbox {
+    margin-top: 10px;
+  }
+  
+
+  @media (max-width: 1000px) {
+    
+    .editProfile  .form-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adjust spacing between elements */
+    width: 100%;
+  }
+  .editProfile  .form-group {
+    margin-bottom: 15px;
+    padding: 10px 10px;
+  }
+  }

@@ -27,7 +27,7 @@ const Signin = () => {
         if(res.data.status === 200){
           navigate('/')
         }
-        console.log(res.data);
+        // console.log(res.data);
         localStorage.setItem("token", res.data.token);
         
       })
@@ -67,6 +67,7 @@ const Signin = () => {
                             aria-describedby="email-addon"
                             onChange={handleChange}
                             name="email"
+                            required
                           />
                         </div>
                         <label>Password</label>
@@ -79,12 +80,13 @@ const Signin = () => {
                             aria-label="Password"
                             name="password"
                             aria-describedby="password-addon"
+                            required
                           />
                         </div>
                         <div className="text-center">
                          
                           <label
-                            className="form-check-label"
+                            className="form-check-label text-danger"
                             htmlFor="rememberMe"
                           >
                              {error && error}

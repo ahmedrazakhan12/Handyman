@@ -1,8 +1,15 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const location = useLocation();
+  
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/sign-in");
+
+  }
   return (
     <aside
       className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 ps ps--active-y bg-transparent"
@@ -311,7 +318,7 @@ const Sidebar = () => {
           </li>
 
           <li className="nav-item">
-            <Link to={"/sign-in"} className={location.pathname === "/sign-in" ? "nav-link active" : "nav-link"}>
+            <div  className="nav-link" onClick={handleLogout} style={{cursor: "pointer"}}> 
               <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg
                   width="12px"
@@ -349,8 +356,8 @@ const Sidebar = () => {
                   </g>
                 </svg>
               </div>
-              <span className="nav-link-text ms-1">Sign In</span>
-            </Link>
+              <span className="nav-link-text ms-1">logout</span>
+            </div>
           </li>
          
         </ul>

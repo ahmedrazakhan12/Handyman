@@ -1,23 +1,50 @@
 require('dotenv').config();
-const { Pool } = require("pg");
+const { Sequelize } = require('sequelize');
 
-const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "Handyman",
-    password: process.env.PASSWORD,
-    port: 5432
+// Create a new Sequelize instance
+const sequelize = new Sequelize('Handyman', 'postgres', process.env.PASSWORD, {
+    host: 'localhost',
+    dialect: 'postgres',
+    port: 5432,
+    logging: false // Set to true if you want to see SQL queries in the console
 });
 
-// Attempt to connect to the database
-pool.connect((err, client, release) => {
-    if (err) {
-        console.error('Error connecting to the database:', err.message);
-    } else {
+// Test the connection
+sequelize.authenticate()
+    .then(() => {
         console.log('Database connected');
-        // Release the client back to the pool
-        release();
-    }
-});
+    })
+    .catch(err => {
+        console.error('Error connecting to the database:', err.message);
+    });
 
-module.exports = pool;
+module.exports = sequelize;
+
+
+
+
+
+
+// require('dotenv').config();
+// const { Pool } = require("pg");
+
+// const pool = new Pool({
+//     user: "postgres",
+//     host: "localhost",
+//     database: "Handyman",
+//     password: process.env.PASSWORD,
+//     port: 5432
+// });
+
+// // Attempt to connect to the database
+// pool.connect((err, client, release) => {
+//     if (err) {
+//         console.error('Error connecting to the database:', err.message);
+//     } else {
+//         console.log('Database connected');
+//         // Release the client back to the pool
+//         release();
+//     }
+// });
+
+// module.exports = pool;
