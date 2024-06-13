@@ -1,6 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error ,setError] = useState("");
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    if (e.target.name === "email") {
+      setEmail(e.target.value);
+    }
+    if (e.target.name === "password") {
+      setPassword(e.target.value);
+    }
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    axios
+      .post("http://localhost:5000/user/login", {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        if(res.data.status === 200){
+          navigate('/')
+        }
+        console.log(res.data);
+        localStorage.setItem("token", res.data.token);
+        
+      })
+      .catch((err) => {
+        console.log("Error Looged In User", err);
+        setError(err.response.data.message); 
+
+
+      });
+  };
   return (
     <>
       <main className="main-content  mt-0">
@@ -19,7 +56,7 @@ const Signin = () => {
                       </p>
                     </div>
                     <div className="card-body">
-                      <form role="form">
+                      <form role="form" onSubmit={handleSubmit}>
                         <label>Email</label>
                         <div className="mb-3">
                           <input
@@ -28,52 +65,40 @@ const Signin = () => {
                             placeholder="Email"
                             aria-label="Email"
                             aria-describedby="email-addon"
+                            onChange={handleChange}
+                            name="email"
                           />
                         </div>
                         <label>Password</label>
                         <div className="mb-3">
                           <input
-                            type="email"
+                            type="password"
+                            onChange={handleChange}
                             className="form-control"
                             placeholder="Password"
                             aria-label="Password"
+                            name="password"
                             aria-describedby="password-addon"
                           />
                         </div>
-                        <div className="form-check form-switch">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="rememberMe"
-                            defaultChecked=""
-                          />
+                        <div className="text-center">
+                         
                           <label
                             className="form-check-label"
                             htmlFor="rememberMe"
                           >
-                            Remember me
+                             {error && error}
                           </label>
                         </div>
                         <div className="text-center">
                           <button
-                            type="button"
-                            className="btn bg-gradient-info w-100 mt-4 mb-0"
+                            type="submit"
+                            className="btn bg-gradient-info w-100 mt-2 mb-0"
                           >
                             Sign in
                           </button>
                         </div>
                       </form>
-                    </div>
-                    <div className="card-footer text-center pt-0 px-lg-2 px-1">
-                      <p className="mb-4 text-sm mx-auto">
-                        Don't have an account?
-                        <a
-                          href="javascript:;"
-                          className="text-info text-gradient font-weight-bold"
-                        >
-                          Sign up
-                        </a>
-                      </p>
                     </div>
                   </div>
                 </div>

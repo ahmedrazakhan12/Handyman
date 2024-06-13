@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
+ 
+
   return (
     <>
       <main className="main-content  mt-0">
@@ -166,7 +170,7 @@ const Signup = () => {
                     </div>
                   </div>
                   <div className="card-body">
-                    <form role="form text-left">
+                    <form role="form text-left" onSubmit={handleSubmit}>
                       <div className="mb-3">
                         <input
                           type="text"
@@ -174,6 +178,8 @@ const Signup = () => {
                           placeholder="Name"
                           aria-label="Name"
                           aria-describedby="email-addon"
+                          name="name"
+                          onChange={handleChange}
                         />
                       </div>
                       <div className="mb-3">
@@ -182,7 +188,9 @@ const Signup = () => {
                           className="form-control"
                           placeholder="Email"
                           aria-label="Email"
+                          name="email"
                           aria-describedby="email-addon"
+                          onChange={handleChange}
                         />
                       </div>
                       <div className="mb-3">
@@ -192,6 +200,19 @@ const Signup = () => {
                           placeholder="Password"
                           aria-label="Password"
                           aria-describedby="password-addon"
+                          name="password"
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <input
+                          type="password"
+                          className="form-control"
+                          placeholder="Confirm Password"
+                          aria-label="Password"
+                          aria-describedby="password-addon"
+                          name="confirmPassword"
+                          onChange={handleChange}
                         />
                       </div>
                       <div className="form-check form-check-info text-left">
@@ -217,20 +238,19 @@ const Signup = () => {
                       </div>
                       <div className="text-center">
                         <button
-                          type="button"
+                          type="submit"
                           className="btn bg-gradient-dark w-100 my-4 mb-2"
                         >
                           Sign up
                         </button>
                       </div>
                       <p className="text-sm mt-3 mb-0">
-                        Already have an account?{" "}
-                        <a
-                          href="javascript:;"
-                          className="text-dark font-weight-bolder"
-                        >
-                          Sign in
-                        </a>
+                        Already have an account?
+                        <Link to={"/sign-in"}>
+                          <span className="text-dark font-weight-bolder">
+                            Sign in
+                          </span>
+                        </Link>
                       </p>
                     </form>
                   </div>
