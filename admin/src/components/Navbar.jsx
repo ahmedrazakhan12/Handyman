@@ -10,7 +10,7 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/user/decodedToken", {
+      .get("http://localhost:5000/admin/decodedToken", {
         headers: { Authorization: token }
       })
       .then((res) => {
@@ -25,7 +25,7 @@ const Navbar = () => {
   useEffect(() => {
     if (loginId) {
       axios
-        .get("http://localhost:5000/user/adminInfo", {
+        .get("http://localhost:5000/admin/adminInfo", {
           headers: { Authorization: ` ${loginId}` } // Corrected usage of loginId
         })
         .then((res) => {
@@ -37,6 +37,28 @@ const Navbar = () => {
     }
   }, [loginId]);
 
+  let label;
+
+switch (location.pathname) {
+  case '/profile/setting':
+    label = 'Profile Setting';
+    break;
+    case '/profile/add-member':
+    label = 'Team Register';
+    break;
+  case '/':
+    label = 'Dashboard';
+    break;
+  case '/profile':
+    label = 'Profile';
+    break;
+  case '/team-management':
+    label = 'Team Management';
+    break;
+  default:
+    label = '';
+}
+
   return (
     <nav
       className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
@@ -46,7 +68,7 @@ const Navbar = () => {
       <div className="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
          
-          <h6 className="font-weight-bolder mb-0 "><span className="text-capitalize">{adminData.name}</span>'s {location.pathname === '/profile' ? 'Profile' : ' Dashboard'}</h6>
+          <h6 className="font-weight-bolder mb-0 "><span className="text-capitalize">{adminData.name}</span>'s {label}</h6>
         </nav>
         <div
           className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"

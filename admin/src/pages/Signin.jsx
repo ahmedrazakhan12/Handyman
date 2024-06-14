@@ -19,7 +19,7 @@ const Signin = () => {
     e.preventDefault();
 
     axios
-      .post("http://localhost:5000/user/login", {
+      .post("http://localhost:5000/admin/login", {
         email: email,
         password: password,
       })

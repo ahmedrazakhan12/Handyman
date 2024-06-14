@@ -1,7 +1,6 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database"); // Adjust the path as necessary
+const sequelize = require("../config/database");
 
-// Define a adminModel model
 const adminModel = sequelize.define(
   "admins",
   {
@@ -17,6 +16,7 @@ const adminModel = sequelize.define(
     },
     email: {
       type: DataTypes.STRING,
+      unique: true, // Ensure emails are unique
       allowNull: false,
     },
     password: {
@@ -25,64 +25,24 @@ const adminModel = sequelize.define(
     },
     pfpImage: {
       type: DataTypes.STRING,
-      allowNull: true,  
-    },
-    description: {
-      type: DataTypes.TEXT, // Increase the length to 500 characters
       allowNull: true,
     },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      // Add length constraint if necessary
+    },
     role: {
-      type: DataTypes.CHAR,
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    // Add other attributes here
+    // Add other attributes as needed
   },
   {
-    // Model options
+    // Additional model options can be defined here
   }
 );
 
-// Sync the model with the database, creating the table if it doesn't exist
-sequelize
-  .sync()
-  .then(() => {
-    console.log("Admins table created successfully.");
-  })
-  .catch((err) => {
-    console.error("Unable to create Admins table:", err);
-  });
-
-
-
-// Method to find adminModel by email
-const editProfile = async (id, name, email, description, pfpImage) => {
-  return await adminModel.update(
-    { name, email, description, pfpImage },
-    { where: { id: id } }
-  );
-};
-
-// Method to find adminModel by email
-const findByEmail = async (email) => {
-  return await adminModel.findOne({ where: { email } });
-};
-
-
-// Method to find adminModel by email
-const adminInfo = async (id) => {
-  return await  adminModel.findOne({ where: { id: id } });
-    
-  
-};
-
-
-
-
-
-// Exports
 module.exports = {
-  findByEmail,
-  editProfile,
   adminModel,
-  adminInfo,
 };

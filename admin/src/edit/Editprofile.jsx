@@ -16,7 +16,7 @@ const Editprofile = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/user/decodedToken", {
+      .get("http://localhost:5000/admin/decodedToken", {
         headers: { Authorization: token }
       })
       .then((res) => {
@@ -30,7 +30,7 @@ const Editprofile = () => {
   useEffect(() => {
     if (loginId) {
       axios
-        .get("http://localhost:5000/user/adminInfo", {
+        .get("http://localhost:5000/admin/adminInfo", {
           headers: { Authorization: ` ${loginId}` }
         })
         .then((res) => {
@@ -80,7 +80,7 @@ const Editprofile = () => {
 
     try {
       const response = await axios.put(
-        "http://localhost:5000/user/editProfile",
+        "http://localhost:5000/admin/editProfile",
         formData,
         {
           headers: {
@@ -107,11 +107,19 @@ const Editprofile = () => {
               <div className="form-flex-container">
                 <div className="panel panel-default">
                   <div className="panel-body text-center">
-                    <img
+                    {adminData.pfpImage ? (
+                      <img
                       src={adminData.pfpImage}
                       className="img-thumbnail"
                       alt="User avatar"
                     />
+                    ): (
+                      <img
+                        src="https://via.placeholder.com/150"
+                        className="img-thumbnail"
+                        alt="User avatar"
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="form-flex-item">
@@ -161,11 +169,11 @@ const Editprofile = () => {
                           onChange={handleChange}
                         ></textarea>
                       </div>
-                      <div className="form-group">
+                      <div className="form-group ">
                         <button type="submit" className="btn btn-primary me-3" >
                           Submit
                         </button>
-                        <button type="reset" className="btn btn-default">
+                        <button type="reset" className="btn btn-default" onClick={() => navigate("/profile")}>
                           Cancel
                         </button>
                       </div>

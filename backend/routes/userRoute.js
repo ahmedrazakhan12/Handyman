@@ -11,6 +11,11 @@ router.post("/login" , userController.userLogin);
 router.get("/decodedToken" , verifyToken , userController.adminData);
 router.get("/adminInfo" , userController.adminInfo);
 router.put("/editProfile" , multer , userController.editPfp);
+router.post("/register"  , userController.register);
+router.put("/changePassword"  , userController.changePassword);
+router.get("/team" , userController.team);
+
+
 
 // router.post("/verifyToken", );
 

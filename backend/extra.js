@@ -83,3 +83,37 @@ exports.getUserByField = async (fieldName, fieldValue) => {
         throw error;
     }
 };
+
+
+// exports.userLogin = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//     const user =  await adminModel.findOne({ where: { email } });
+
+//     if (user && user.password === password) {
+//       console.log("Password matched. Successfully logged in!");
+//       const token = jwt.sign({ payload: user }, privateKey);
+//       // console.log("Token:", token);
+//       res.status(200).json({
+//         status: 200,
+//         data: [user.id, user.name, user.email],
+//         token: token,
+//         message: "User logged in successfully",
+//       });
+//     } else {
+//       console.log("Password does not match!");
+//       res.status(400).json({
+//         status: 400,
+//         data: null,
+//         message: "Invalid Credentials.",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({
+//       status: 500,
+//       data: null,
+//       message: "Internal server error.",
+//     });
+//   }
+// };

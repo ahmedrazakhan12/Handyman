@@ -1,15 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+
 const Sidebar = () => {
+
+  const [adminData, setAdminData] = useState({});
+  const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:5000/admin/decodedToken", {
+        headers: { Authorization: token }
+      })
+      .then((res) => {
+        setLoginId(res.data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+ 
+  useEffect(() => {
+    if (loginId) {
+      axios
+        .get("http://localhost:5000/admin/adminInfo", {
+          headers: { Authorization: ` ${loginId}` } // Corrected usage of loginId
+        })
+        .then((res) => {
+          setAdminData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loginId]);
+
+
+
   const location = useLocation();
-  
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.clear();
     navigate("/sign-in");
-
-  }
+  };
   return (
     <aside
       className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 ps ps--active-y bg-transparent"
@@ -36,15 +74,18 @@ const Sidebar = () => {
       </div>
       <hr className="horizontal dark mt-0" />
 
-
-      
       <div
         className="collapse navbar-collapse  w-auto h-100 "
         id="sidenav-collapse-main"
       >
         <ul className="navbar-nav">
           <li className="nav-item">
-            <Link to={"/"} className={location.pathname === "/" ? "nav-link active" : "nav-link"}>
+            <Link
+              to={"/"}
+              className={
+                location.pathname === "/" ? "nav-link active" : "nav-link"
+              }
+            >
               <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg
                   width="12px"
@@ -219,59 +260,18 @@ const Sidebar = () => {
               <span className="nav-link-text ms-1">Virtual Reality</span>
             </a>
           </li>
+         */}
+
+          {/* {profile} */}
           <li className="nav-item">
-            <a className="nav-link  " >
-              <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                <svg
-                  width="12px"
-                  height="12px"
-                  viewBox="0 0 40 40"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                >
-                  <title>settings</title>
-                  <g
-                    stroke="none"
-                    strokeWidth={1}
-                    fill="none"
-                    fillRule="evenodd"
-                  >
-                    <g
-                      transform="translate(-2020.000000, -442.000000)"
-                      fill="#FFFFFF"
-                      fillRule="nonzero"
-                    >
-                      <g transform="translate(1716.000000, 291.000000)">
-                        <g transform="translate(304.000000, 151.000000)">
-                          <polygon
-                            className="color-background opacity-6"
-                            points="18.0883333 15.7316667 11.1783333 8.82166667 13.3333333 6.66666667 6.66666667 0 0 6.66666667 6.66666667 13.3333333 8.82166667 11.1783333 15.315 17.6716667"
-                          />
-                          <path
-                            className="color-background opacity-6"
-                            d="M31.5666667,23.2333333 C31.0516667,23.2933333 30.53,23.3333333 30,23.3333333 C29.4916667,23.3333333 28.9866667,23.3033333 28.48,23.245 L22.4116667,30.7433333 L29.9416667,38.2733333 C32.2433333,40.575 35.9733333,40.575 38.275,38.2733333 L38.275,38.2733333 C40.5766667,35.9716667 40.5766667,32.2416667 38.275,29.94 L31.5666667,23.2333333 Z"
-                          />
-                          <path
-                            className="color-background"
-                            d="M33.785,11.285 L28.715,6.215 L34.0616667,0.868333333 C32.82,0.315 31.4483333,0 30,0 C24.4766667,0 20,4.47666667 20,10 C20,10.99 20.1483333,11.9433333 20.4166667,12.8466667 L2.435,27.3966667 C0.95,28.7083333 0.0633333333,30.595 0.00333333333,32.5733333 C-0.0583333333,34.5533333 0.71,36.4916667 2.11,37.89 C3.47,39.2516667 5.27833333,40 7.20166667,40 C9.26666667,40 11.2366667,39.1133333 12.6033333,37.565 L27.1533333,19.5833333 C28.0566667,19.8516667 29.01,20 30,20 C35.5233333,20 40,15.5233333 40,10 C40,8.55166667 39.685,7.18 39.1316667,5.93666667 L33.785,11.285 Z"
-                          />
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </svg>
-              </div>
-              <span className="nav-link-text ms-1">RTL</span>
-            </a>
-          </li>
-          <li className="nav-item mt-3">
-            <h6 className="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">
-              Account pages
-            </h6>
-          </li> */}
-          <li className="nav-item">
-            <Link to={"/profile"} className={location.pathname === "/profile" ? "nav-link active" : "nav-link"}>
+            <Link
+              to={"/profile"}
+              className={
+                location.pathname === "/profile"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
               <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg
                   width="12px"
@@ -317,8 +317,44 @@ const Sidebar = () => {
             </Link>
           </li>
 
+          {/* Add Member */}
+
+         {adminData.role === "super-admin" && (
+           <li className="nav-item">
+           <Link
+             to={"/team-management"}
+             className={
+               location.pathname === "/team-management"
+                 ? "nav-link active"
+                 : "nav-link"
+             }
+           >
+             <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+               <svg
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 640 512"
+                 color=""
+                 className={
+                   location.pathname === "/team-management"
+                     ? "text-light"
+                     : "text-dark"
+                 }
+               >
+                 <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+               </svg>
+             </div>
+             <span className="nav-link-text ms-1">Team Management</span>
+           </Link>
+         </li>
+         )}
+
+          {/* Logout */}
           <li className="nav-item">
-            <div  className="nav-link" onClick={handleLogout} style={{cursor: "pointer"}}> 
+            <div
+              className="nav-link"
+              onClick={handleLogout}
+              style={{ cursor: "pointer" }}
+            >
               <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg
                   width="12px"
@@ -359,13 +395,9 @@ const Sidebar = () => {
               <span className="nav-link-text ms-1">logout</span>
             </div>
           </li>
-         
         </ul>
       </div>
 
-
-
-      
       {/* <div className="sidenav-footer mx-3 ">
         <div
           className="card card-background shadow-none card-background-mask-secondary"
