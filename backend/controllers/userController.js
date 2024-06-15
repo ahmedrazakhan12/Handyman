@@ -80,10 +80,9 @@ exports.adminData = async (req, res) => {
 
 // Controller function to handle edit profile
 
-
 exports.editPfp = async (req, res) => {
   try {
-    const { id, username, email, description  } = req.body;
+    const { id, username, email, description } = req.body;
     let imagePath = null;
 
     // Check if req.file exists (new profile picture uploaded)
@@ -95,7 +94,7 @@ exports.editPfp = async (req, res) => {
     // Method to find adminModel by email
     const editProfile = async (id, name, email, description, pfpImage) => {
       const updateFields = { name, email, description };
-      
+
       // Only add pfpImage to updateFields if imagePath is not null
       if (pfpImage !== null) {
         updateFields.pfpImage = pfpImage;
@@ -113,7 +112,6 @@ exports.editPfp = async (req, res) => {
     res.status(500).json({ message: "Failed to update profile" });
   }
 };
-
 
 // Import adminModel from Sequelize setup (assuming Sequelize is correctly configured)
 exports.adminInfo = async (req, res) => {
@@ -225,11 +223,10 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-
 exports.team = async (req, res) => {
   try {
     const admins = await adminModel.findAll({
-      order: [['id', 'ASC']], // Order by id in ascending order
+      order: [["id", "ASC"]], // Order by id in ascending order
     });
     res.status(200).json(admins);
   } catch (error) {
@@ -260,5 +257,25 @@ exports.adminDelete = async (req, res) => {
   } catch (error) {
     console.error("Error in deleting admin:", error);
     return res.status(500).json({ message: "Failed to delete admin" });
+  }
+};
+
+exports.changeAdminPassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newPassword } = req.body;
+    console.log("ID:", id, "New Password:", newPassword);
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await adminModel.update(
+      { password: hashedPassword },
+      { where: { id: id } }
+    );
+
+    console.log("Password changed successfully");
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error in changing admin password:", error);
+    return res.status(500).json({ message: "Failed to change admin password" });
   }
 };

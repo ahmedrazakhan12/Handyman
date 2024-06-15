@@ -16,6 +16,7 @@ router.put("/changePassword"  , userController.changePassword);
 router.get("/team" , userController.team);
 router.get("/team/:id" , userController.teamDataById);
 router.delete("/team/delete/:id" , userController.adminDelete);
+router.put("/changeAdminPassword/:id"  , userController.changeAdminPassword);
 
 
 

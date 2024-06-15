@@ -1,12 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { Link } from "react-router-dom";
 const Team = () => {
-  const [data,setData] = useState([])
+  const [data, setData] = useState([]);
+  const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:5000/admin/decodedToken", {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        setLoginId(res.data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   useEffect(() => {
     axios
       .get("http://localhost:5000/admin/team")
@@ -28,9 +44,14 @@ const Team = () => {
           <div className="row">
             <div className="col-12">
               <div className="card mb-4">
-                <div className="card-header pb-0" style={{ display: "flex", justifyContent: "space-between" }}>
+                <div
+                  className="card-header pb-0"
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <h6>Team Members</h6>
-                  <Link to="/add-member"><FontAwesomeIcon icon={faUserPlus} /></Link>
+                  <Link to="/add-member">
+                    <FontAwesomeIcon icon={faUserPlus} />
+                  </Link>
                 </div>
                 <div className="card-body px-0 pt-0 pb-2">
                   <div className="table-responsive p-0">
@@ -53,61 +74,83 @@ const Team = () => {
                         </tr>
                       </thead>
                       <tbody>
-
-
-                       {data.map((item , index)=>{
-                        return(
-                          <>
-                          <tr>
-                          <td>
-                            <div className="d-flex px-2 py-1">
-                             <Link to={`/admin-data/${item.id}`}>
-                             <div>
-                             <span className="text-xs text-secondary mb-0 me-2">{index + 1}. </span> 
-                                {item.pfpImage ? <img src={item.pfpImage} className="avatar avatar-sm me-3 " style={{objectFit:"cover"}} alt="user1" /> 
-                                :
-                                 <img src="../assets/img/team-2.jpg" className="avatar avatar-sm me-3" alt="user1" />}
-                              </div>
-                             </Link>
-                              <div className="d-flex flex-column justify-content-center">
-                                <h6 className="mb-0 text-sm text-capitalize">
-                                  {item.name}
-                                </h6>
-                                <p className="text-xs text-secondary mb-0">
-                                  {item.email} 
-                                  </p>
+                        {data.map((item, index) => {
+                          return (
+                            <>
+                              <tr>
+                                <td>
+                                  <div className="d-flex px-2 py-1">
+                                    <Link to={`/admin-data/${item.id}`}>
+                                      <div>
+                                        <span className="text-xs text-secondary mb-0 me-2">
+                                          {index + 1}.{" "}
+                                        </span>
+                                        {item.pfpImage ? (
+                                          <img
+                                            src={item.pfpImage}
+                                            className="avatar avatar-sm me-3 "
+                                            style={{ objectFit: "cover" }}
+                                            alt="user1"
+                                          />
+                                        ) : (
+                                          <img
+                                            src="../assets/img/team-2.jpg"
+                                            className="avatar avatar-sm me-3"
+                                            alt="user1"
+                                          />
+                                        )}
+                                      </div>
+                                    </Link>
+                                    <div className="d-flex flex-column justify-content-center">
+                                      <Link to={`/admin-data/${item.id}`}>
+                                        <h6 className="mb-0 text-sm text-capitalize">
+                                          {item.name}
+                                        </h6>
+                                        <p className="text-xs text-secondary mb-0">
+                                          {item.email}
+                                        </p>
+                                      </Link>
+                                    </div>
                                   </div>
-                            </div>
-                          </td>
+                                </td>
 
-                          <td>
-                    <p className="text-xs font-weight-bold mb-0">Manager</p>
-                    <p className="text-xs text-secondary mb-0">{item.role}</p>
-                  </td>
-                  <td className="align-middle text-center text-sm">
-                    <span className="badge badge-sm bg-gradient-success">
-                      Online
-                    </span>
-                  </td>
-                  <td className="align-middle text-center">
-                    <span className="text-secondary text-xs font-weight-bold">
-                      23/04/18
-                    </span>
-                  </td>
-                  <td className="align-middle">
-                    <Link 
-                    to={`/edit-member/${item.id}`}                    
-                    className="text-secondary font-weight-bold text-xs"
-                    >
-                      Edit
-                    </Link>
-                  </td>
-                          </tr>
-                          </>
-                                )
-                            })
-                        }
-                         
+                                <td>
+                                  <p className="text-xs font-weight-bold mb-0">
+                                    Manager
+                                  </p>
+                                  <p className="text-xs text-secondary mb-0">
+                                    {item.role}
+                                  </p>
+                                </td>
+                                <td className="align-middle text-center text-sm">
+                                  <span className="badge badge-sm bg-gradient-success">
+                                    Online
+                                  </span>
+                                </td>
+                                <td className="align-middle text-center">
+                                  <span className="text-secondary text-xs font-weight-bold">
+                                    23/04/18
+                                  </span>
+                                </td>
+                                <td className="align-middle">
+                                 {
+                                    String(item.id) !== String(loginId) ? (
+                                      <Link
+                                      to={`/edit-member/${item.id}`}
+                                      className="text-secondary font-weight-bold text-xs"
+                                    >
+                                      Edit
+                                    </Link>
+                                    ) : (
+                                      ''
+                                    )
+
+                                 }
+                                </td>
+                              </tr>
+                            </>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -117,7 +160,7 @@ const Team = () => {
           </div>
         </div>
       </main>
-    </>
+    </> 
   );
 };
 

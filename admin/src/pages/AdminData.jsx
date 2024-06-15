@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faUnlock } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import swal from "sweetalert2";
 const AdminData = () => {
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [singleData, setSingleData] = useState([]);
+  const [adminData, setAdminData] = useState({});
+  const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
+  const [error, setError] = useState(false);
+  const [confirmError, setConfirmError] = useState("");
   const navigate = useNavigate();
+
+  console.log(id, loginId);
   useEffect(() => {
     axios
       .get("http://localhost:5000/admin/team")
@@ -35,6 +42,76 @@ const AdminData = () => {
         });
     }
   }, [id]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:5000/admin/decodedToken", {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        setLoginId(res.data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const [formData, setFormData] = useState({
+    newPassword: "",
+    re_new_password: "",
+  });
+
+  console.log(formData);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = {
+      newPassword: e.target.newPassword.value,
+      re_new_password: e.target.re_new_password.value,
+    };
+
+    if (formData.newPassword !== formData.re_new_password) {
+      return setConfirmError("Passwords do not match");
+    }
+    if (formData.newPassword == formData.re_new_password) {
+      setConfirmError("");
+    }
+
+    axios
+      .put(`http://localhost:5000/admin/changeAdminPassword/${id}`, formData)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.message == "Password changed successfully") {
+         swal.fire({
+           icon: "success",
+           title: "Success",
+           text: "Password changed successfully",
+           timer: 1000,
+         })
+        }
+
+        setFormData({
+          newPassword: "",
+          re_new_password: "",
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response) {
+          setError(true);
+        } else {
+          console.log("Error:", err.message);
+        }
+      });
+  };
 
   return (
     <>
@@ -109,12 +186,14 @@ const AdminData = () => {
                                     </div>
                                   </Link>
                                   <div className="d-flex flex-column justify-content-center">
-                                    <h6 className="mb-0 text-sm">
-                                      {item.name}
-                                    </h6>
-                                    <p className="text-xs text-secondary mb-0">
-                                      {item.email}
-                                    </p>
+                                    <Link to={`/admin-data/${item.id}`}>
+                                      <h6 className="mb-0 text-sm">
+                                        {item.name}
+                                      </h6>
+                                      <p className="text-xs text-secondary mb-0">
+                                        {item.email}
+                                      </p>
+                                    </Link>
                                   </div>
                                 </div>
                               </td>
@@ -140,7 +219,14 @@ const AdminData = () => {
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
                         <h5 className="text-capitalize">
-                          Username: {singleData.name}
+                          Username: {singleData.name} 
+                          {String(loginId) === String(id) ? (
+                            <span style={{ marginLeft: "10px" }}>
+                              (You)
+                            </span>
+                      ) : (
+                        ""
+                      )}
                         </h5>
                         <small>
                           {singleData.description === null
@@ -165,15 +251,19 @@ const AdminData = () => {
                           Information
                         </a>
                       </li>
-                      <li className="nav-item">
-                        <a
-                          className="nav-link"
-                          data-toggle="tab"
-                          href="#members"
-                        >
-                          Security
-                        </a>
-                      </li>
+                      {String(loginId) !== String(id) ? (
+                        <li className="nav-item">
+                          <a
+                            className="nav-link"
+                            data-toggle="tab"
+                            href="#members"
+                          >
+                            Security
+                          </a>
+                        </li>
+                      ) : (
+                        ""
+                      )}
                     </ul>
                     <div className="tab-content">
                       <div
@@ -266,14 +356,57 @@ const AdminData = () => {
                         </div>
                       </div>
                       <div id="members" className="tab-pane fade">
-                        <div className="card-body p-3">
-                          <ul className="list-group">
-                            <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
-                              <strong className="text-dark">Password:</strong>{" "}
-                              &nbsp;
-                              {singleData.password}
-                            </li>
-                          </ul>
+                        <div class="modal-content">
+                          <form action="" onSubmit={handleSubmit}>
+                            <div class="modal-body">
+                              <div className="row p-2">
+                                <label htmlFor="" className={"form-label p-0"}>
+                                  New Password
+                                </label>
+                                <input
+                                  type="password"
+                                  name="newPassword"
+                                  onChange={handleChange}
+                                  value={formData.newPassword}
+                                  className={
+                                    confirmError
+                                      ? "form-control w-100 is-invalid"
+                                      : "form-control w-100"
+                                  }
+                                  required
+                                />
+                              </div>
+
+                              <div className="row p-2">
+                                <label htmlFor="" className={"form-label p-0"}>
+                                  Re-type New Password
+                                </label>
+                                <input
+                                  type="password"
+                                  name="re_new_password"
+                                  onChange={handleChange}
+                                  value={formData.re_new_password}
+                                  className={
+                                    confirmError
+                                      ? "form-control w-100 is-invalid"
+                                      : "form-control w-100"
+                                  }
+                                  required
+                                />
+                              </div>
+                              {confirmError && (
+                                <div className="text-danger">
+                                  {confirmError}
+                                </div>
+                              )}
+                            </div>
+                            <div class="modal-footer">
+                              
+                              <button type="submit" className="btn btn-primary">
+                                Save changes
+                              </button>
+                            </div>
+                          </form>
                         </div>
                       </div>
                     </div>

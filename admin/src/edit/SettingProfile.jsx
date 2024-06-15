@@ -132,107 +132,84 @@ const SettingProfile = () => {
                           >
                             Security | Change Password
                           </h6>
+                          
                         </div>
                       </div>
                     </td>
                   </tr>
                 </tbody>
               </table>
+              
             </div>
-          </div>
-
-          <div
-            class="modal fade"
-            id="exampleModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">
-                    Change Password
-                  </h5>
-                </div>
-                <form action="" onSubmit={handleSubmit}>
-                  <div class="modal-body">
-                    <div className="row p-2">
-                      <label htmlFor="" className="form-label p-0">
-                        Current Password
-                      </label>
-                      <input
-                        type="password"
-                        name="currentPassword"
-                        onChange={handleChange}
-                        className={
-                          error === true
-                            ? "form-control w-100 is-invalid"
-                            : "form-control w-100"
-                        }
-                        error
-                        required
-                      />
-                    </div>
-
-                    <div className="row p-2">
-                      <label htmlFor="" className={"form-label p-0"}>
-                        New Password
-                      </label>
-                      <input
-                        type="password"
-                        name="newPassword"
-                        onChange={handleChange}
-                        className={
-                          confirmError
-                            ? "form-control w-100 is-invalid"
-                            : "form-control w-100"
-                        }
-                        required
-                      />
-                    </div>
-
-                    <div className="row p-2">
-                      <label htmlFor="" className={"form-label p-0"}>
-                        Re-type New Password
-                      </label>
-                      <input
-                        type="password"
-                        name="re_new_password"
-                        onChange={handleChange}
-                        className={
-                          confirmError
-                            ? "form-control w-100 is-invalid"
-                            : "form-control w-100"
-                        }
-                        required
-                      />
-                    </div>
-                    {confirmError && (
-                      <div className="text-danger">{confirmError}</div>
-                    )}
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                    <button
-                      type="submit"
-                      className="btn btn-primary"
-                      {...(closeModel ? { "data-dismiss": "modal" } : {})}
-                    >
-                      Save changes
-                    </button>
-                  </div>
-                </form>
+            <form action="" onSubmit={handleSubmit}>
+            <div class="modal-body">
+              <div className="row p-2">
+                <label htmlFor="" className="form-label p-0">
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  onChange={handleChange}
+                  className={
+                    error === true
+                      ? "form-control w-100 is-invalid"
+                      : "form-control w-100"
+                  }
+                  error
+                  required
+                />
               </div>
+
+              <div className="row p-2">
+                <label htmlFor="" className={"form-label p-0"}>
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  onChange={handleChange}
+                  className={
+                    confirmError
+                      ? "form-control w-100 is-invalid"
+                      : "form-control w-100"
+                  }
+                  required
+                />
+              </div>
+
+              <div className="row p-2">
+                <label htmlFor="" className={"form-label p-0"}>
+                  Re-type New Password
+                </label>
+                <input
+                  type="password"
+                  name="re_new_password"
+                  onChange={handleChange}
+                  className={
+                    confirmError
+                      ? "form-control w-100 is-invalid"
+                      : "form-control w-100"
+                  }
+                  required
+                />
+              </div>
+              {confirmError && (
+                <div className="text-danger">{confirmError}</div>
+              )}
             </div>
+            <div class="modal-footer">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                {...(closeModel ? { "data-dismiss": "modal" } : {})}
+              >
+                Save changes
+              </button>
+            </div>
+          </form>
           </div>
+         
         </div>
       </main>
     </>
