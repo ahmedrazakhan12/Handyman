@@ -1,71 +1,159 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import Swal from "sweetalert2";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import "../App.css";
-const EditAdmins = () => {
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+import { useNavigate, useParams } from "react-router-dom";
 
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "admin", // Default role
-  });
+const Editprofile = () => {
+  const { id } = useParams();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [description, setDescription] = useState("");
+  const [pfpImage, setPfpImage] = useState(null);
+  const [adminData, setAdminData] = useState({});
+  const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:5000/admin/decodedToken", {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        setLoginId(res.data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`http://localhost:5000/admin/team/${id}`, {
+          headers: { Authorization: ` ${loginId}` },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setAdminData(res.data);
+          setUsername(res.data.name);
+          setEmail(res.data.email);
+          setDescription(res.data.description);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [id]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    switch (name) {
+      case "username":
+        setUsername(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "description":
+        setDescription(value);
+        break;
+
+      default:
+        break;
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setPfpImage(file);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      return setError("Passwords do not match");
-    }
+    const formData = new FormData();
+    formData.append("id", adminData.id);
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("description", description);
+    formData.append("pfpImage", pfpImage);
 
-    axios
-      .post("http://localhost:5000/admin/register", formData)
-      .then((res) => {
-        // Handle success response
+    try {
+      const response = await axios.put(
+        "http://localhost:5000/admin/editProfile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Edit-Profile: ", response.data);
+      navigate("/team-management");
+    } catch (error) {
+      console.error("Failed to Edit-Profile: ", error);
+    }
+  };
+
+
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      });
+
+      if (result.isConfirmed) {
+        await axios.delete(`http://localhost:5000/admin/team/delete/${adminData.id}`);
         Swal.fire({
-          title: "Admin Registered  !",
-          text: "User registered successfully!",
+          title: "Deleted!",
+          text: "The admin has been deleted.",
           icon: "success",
           timer: 1000,
         });
-
-        navigate("/");
-        // Optionally, you can redirect or perform other actions after successful registration
-      })
-      .catch((err) => {
-        // Handle error response
-        console.error("Error registering admin:", err);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to register admin.",
-          icon: "error",
-        });
-        setError(err.response.data.message); // Set error state if necessary
-      });
+        
+        navigate("/team-management");
+      }
+    } catch (error) {
+      console.error("Failed to delete admin:", error);
+      Swal.fire(
+        'Error!',
+        'Failed to delete admin.',
+        'error'
+      );
+    }
   };
 
-  // Optional: Logging form data whenever it changes
-  console.log(formData);
+
 
   return (
     <>
       <Sidebar />
-      <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg overflow-y-hidden">
-        {/* <Navbar /> */}
-        <div className="container-fluid  main-content position-relative ">
+      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <div className="d-flex justify-content-between align-items-center me-5" >
+        <h3
+          className="text-uppercase"
+          style={{ marginLeft: "32px", marginTop: "12px" }}
+        >
+          Edit {adminData.name}
+        </h3>
+        <h3
+        >
+      <FontAwesomeIcon icon={faTrash} style={{ fontSize: '24px', color: '#AB1402', cursor: 'pointer' }} onClick={handleDelete} />
+
+        </h3>
+        </div>
+        <div className="container-fluid main-content position-relative">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col">
               <div
@@ -73,33 +161,24 @@ const EditAdmins = () => {
                 style={{ overflow: "hidden", borderRadius: ".5rem" }}
               >
                 <div className="row g-0">
-                  <div
-                    className="col-xl-6 d-none d-xl-block"
-                    style={{ height: "670px", overflow: "hidden" }}
-                  >
+                  <div className="col-xl-6">
                     <img
-                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
+                      src={adminData.pfpImage || "../assets/img/team-2.jpg"}
                       alt="Sample photo"
                       className="img-fluid"
                       style={{
-                        height: "auto",
+                        height: "700px",
                         width: "100%",
                         objectFit: "cover",
-                        // borderTopLeftRadius: ".5rem",
-                        // borderBottomLeftRadius: ".5rem",
                       }}
                     />
                   </div>
                   <div className="col-xl-6">
-                    <div className="card-body p-md-5 text-black">
-                      <h3 className="mb-5 text-uppercase">Add Members</h3>
+                    <div className="card-body text-black">
                       <form onSubmit={handleSubmit}>
                         <div className="row">
-                          <div className="col-md-6 mb-4">
-                            <div
-                              data-mdb-input-init=""
-                              className="form-outline"
-                            >
+                          <div className="col-md-6">
+                            <div className="form-outline">
                               <label
                                 className="form-label"
                                 htmlFor="form3Example1m"
@@ -112,15 +191,13 @@ const EditAdmins = () => {
                                 className="form-control form-control-lg"
                                 required
                                 name="username"
+                                value={username}
                                 onChange={handleChange}
                               />
                             </div>
                           </div>
                           <div className="col-md-6 mb-4">
-                            <div
-                              data-mdb-input-init=""
-                              className="form-outline"
-                            >
+                            <div className="form-outline">
                               <label
                                 className="form-label"
                                 htmlFor="form3Example1n"
@@ -131,6 +208,7 @@ const EditAdmins = () => {
                                 type="email"
                                 className="form-control form-control-lg"
                                 required
+                                value={email}
                                 onChange={handleChange}
                                 name="email"
                               />
@@ -138,67 +216,48 @@ const EditAdmins = () => {
                           </div>
                         </div>
 
-                        <div
-                          data-mdb-input-init=""
-                          className="form-outline mb-4"
-                        >
-                          <label className="form-label" htmlFor="form3Example8">
-                            Password
-                          </label>
-                          <input
-                            type="password"
-                            name="password"
-                            className="form-control form-control-lg"
-                            required
-                            value={formData.password}
-                            onChange={handleChange}
-                          />
-                        </div>
-
-                        <div
-                          data-mdb-input-init=""
-                          className="form-outline mb-4"
-                        >
-                          <label className="form-label" htmlFor="form3Example8">
-                            Confirm Password
-                          </label>
-                          <input
-                            type="password"
-                            name="confirmPassword"
-                            className="form-control form-control-lg"
-                            required
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                          />
-                        </div>
-
-                        <div
-                          data-mdb-input-init=""
-                          className="form-outline mb-4"
-                        >
+                        <div className="form-outline mb-4">
                           <label className="form-label" htmlFor="form3Example8">
                             Role
                           </label>
                           <select
-                            data-mdb-select-init=""
                             className="form-select"
                             name="role"
+                            onChange={handleChange}
                           >
-                            <option value={1}>Admin</option>
+                            <option value="admin">Admin</option>
                           </select>
                         </div>
-                        <div className="row">
-                          <span className="text-danger text-sm text-center pb-2">
-                            {error && error}
-                          </span>
+
+                        <div className="form-group">
+                          <label className="control-label">Image</label>
+                          <input
+                            type="file"
+                            accept="image/png, image/jpeg"
+                            className="form-control"
+                            name="pfpImage"
+                            onChange={handleFileChange}
+                          />
                         </div>
-                        <div className="row ">
+
+                        <div className="form-group">
+                          <label className="control-label">Description</label>
+                          <textarea
+                            className="form-control"
+                            style={{ height: "295px" }}
+                            name="description"
+                            value={description === 'null' || description === null || description === undefined ? "" : description}
+                            onChange={handleChange}
+                          ></textarea>
+                        </div>
+
+                        <div className="row">
                           <div className="col">
                             <button
                               type="submit"
                               className="btn btn-primary btn-lg w-100 "
                             >
-                              Register Admin
+                              Update Admin
                             </button>
                           </div>
                         </div>
@@ -215,4 +274,4 @@ const EditAdmins = () => {
   );
 };
 
-export default EditAdmins;
+export default Editprofile;

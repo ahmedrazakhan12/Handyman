@@ -25,7 +25,7 @@ exports.userLogin = async (req, res) => {
       const token = jwt.sign(
         { id: user.id, name: user.name, email: user.email },
         privateKey,
-        { expiresIn: "1h" }
+        { expiresIn: "30d" }
       );
 
       res.status(200).json({
@@ -80,18 +80,28 @@ exports.adminData = async (req, res) => {
 
 // Controller function to handle edit profile
 
+
 exports.editPfp = async (req, res) => {
   try {
-    const { id, username, email, description } = req.body;
-    const photoFileName = req.file.filename;
-    const imagePath = `http://localhost:5000/public/uploads/pfp/${photoFileName}`;
+    const { id, username, email, description  } = req.body;
+    let imagePath = null;
+
+    // Check if req.file exists (new profile picture uploaded)
+    if (req.file) {
+      const photoFileName = req.file.filename;
+      imagePath = `http://localhost:5000/public/uploads/pfp/${photoFileName}`;
+    }
 
     // Method to find adminModel by email
     const editProfile = async (id, name, email, description, pfpImage) => {
-      return await adminModel.update(
-        { name, email, description, pfpImage },
-        { where: { id: id } }
-      );
+      const updateFields = { name, email, description };
+      
+      // Only add pfpImage to updateFields if imagePath is not null
+      if (pfpImage !== null) {
+        updateFields.pfpImage = pfpImage;
+      }
+
+      return await adminModel.update(updateFields, { where: { id: id } });
     };
 
     // Call editProfile to update user profile with the received data
@@ -103,6 +113,7 @@ exports.editPfp = async (req, res) => {
     res.status(500).json({ message: "Failed to update profile" });
   }
 };
+
 
 // Import adminModel from Sequelize setup (assuming Sequelize is correctly configured)
 exports.adminInfo = async (req, res) => {
@@ -217,10 +228,37 @@ exports.changePassword = async (req, res) => {
 
 exports.team = async (req, res) => {
   try {
-    const admins = await adminModel.findAll();
+    const admins = await adminModel.findAll({
+      order: [['id', 'ASC']], // Order by id in ascending order
+    });
     res.status(200).json(admins);
+  } catch (error) {
+    console.error("Error in finding admins:", error);
+    return res.status(500).json({ message: "Failed to find admins" });
+  }
+};
+
+exports.teamDataById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const admin = await adminModel.findOne({ where: { id: id } });
+    res.status(200).json(admin);
   } catch (error) {
     console.error("Error in Finding admins:", error);
     return res.status(500).json({ message: "Failed to find admins" });
+  }
+};
+
+exports.adminDelete = async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Delete the admin
+    await adminModel.destroy({ where: { id: id } });
+    console.log("Admin deleted successfully");
+
+    res.status(200).json({ message: "Admin deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleting admin:", error);
+    return res.status(500).json({ message: "Failed to delete admin" });
   }
 };

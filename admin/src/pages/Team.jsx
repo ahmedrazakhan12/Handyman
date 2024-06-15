@@ -55,19 +55,22 @@ const Team = () => {
                       <tbody>
 
 
-                       {data.map((item)=>{
+                       {data.map((item , index)=>{
                         return(
                           <>
                           <tr>
                           <td>
                             <div className="d-flex px-2 py-1">
-                              <div>
+                             <Link to={`/admin-data/${item.id}`}>
+                             <div>
+                             <span className="text-xs text-secondary mb-0 me-2">{index + 1}. </span> 
                                 {item.pfpImage ? <img src={item.pfpImage} className="avatar avatar-sm me-3 " style={{objectFit:"cover"}} alt="user1" /> 
                                 :
                                  <img src="../assets/img/team-2.jpg" className="avatar avatar-sm me-3" alt="user1" />}
                               </div>
+                             </Link>
                               <div className="d-flex flex-column justify-content-center">
-                                <h6 className="mb-0 text-sm">
+                                <h6 className="mb-0 text-sm text-capitalize">
                                   {item.name}
                                 </h6>
                                 <p className="text-xs text-secondary mb-0">

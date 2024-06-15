@@ -284,7 +284,7 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="card-body p-3">
-                  <p className="text-sm">{adminData.description}</p>
+                  <p className="text-sm">{adminData.description === "null" ? "No description" : adminData.description}</p>
                   <hr className="horizontal gray-light my-4" />
                   <ul className="list-group">
                     <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">

@@ -156,7 +156,6 @@ const Editprofile = () => {
                           className="form-control"
                           name="pfpImage"
                           onChange={handleFileChange}
-                          required
                         />
                       </div>
                       <div className="form-group">
@@ -165,7 +164,8 @@ const Editprofile = () => {
                           className="form-control"
                           style={{ height: "180px" }}
                           name="description"
-                          value={description}
+                          placeholder={description === 'null' ? "No Description" : ''}
+                          value={description === 'null' ? '' : description}
                           onChange={handleChange}
                         ></textarea>
                       </div>
