@@ -15,6 +15,8 @@ import SettingProfile from "./edit/SettingProfile";
 import Team from "./pages/Team";
 import EditAdmins from "./edit/EditAdmins";
 import AdminData from "./pages/AdminData";
+import Users from "./pages/Users";
+import AddCustomer from "./pages/AddCustomer";
 
 function App() {
   const [adminData, setAdminData] = useState({});
@@ -67,6 +69,8 @@ function App() {
             </>
             )}
             <Route path="/sign-in" element={<Signin />} />
+            <Route path="/customers" element={<Users />} />
+            <Route path="/add-customer" element={<AddCustomer />} />
           </Routes>
       
     </div>

@@ -19,6 +19,20 @@ const Dashboard = () => {
       });
   }, []);
 
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/user/users")
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log("ahmed", err);
+      });
+  }, []);
   
   return (
     <>
@@ -35,13 +49,11 @@ const Dashboard = () => {
                     <div className="col-8">
                       <div className="numbers">
                         <p className="text-sm mb-0 text-capitalize font-weight-bold">
-                          Today's Money
+                        Total Users
                         </p>
                         <h5 className="font-weight-bolder mb-0">
-                          $53,000
-                          <span className="text-success text-sm font-weight-bolder">
-                            +55%
-                          </span>
+                        {data.length}
+                          
                         </h5>
                       </div>
                     </div>
@@ -64,7 +76,8 @@ const Dashboard = () => {
                     <div className="col-8">
                       <div className="numbers">
                         <p className="text-sm mb-0 text-capitalize font-weight-bold">
-                          Today's Users
+                        Service Providers
+
                         </p>
                         <h5 className="font-weight-bolder mb-0">
                           2,300
@@ -93,7 +106,8 @@ const Dashboard = () => {
                     <div className="col-8">
                       <div className="numbers">
                         <p className="text-sm mb-0 text-capitalize font-weight-bold">
-                          New Clients
+                        Total Orders
+
                         </p>
                         <h5 className="font-weight-bolder mb-0">
                           +3,462
@@ -122,7 +136,7 @@ const Dashboard = () => {
                     <div className="col-8">
                       <div className="numbers">
                         <p className="text-sm mb-0 text-capitalize font-weight-bold">
-                          Sales
+                        Revenue
                         </p>
                         <h5 className="font-weight-bolder mb-0">
                           $103,430

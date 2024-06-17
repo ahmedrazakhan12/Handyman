@@ -16,12 +16,12 @@ const AdminData = () => {
   const [confirmError, setConfirmError] = useState("");
   const navigate = useNavigate();
 
-  console.log(id, loginId);
+  // console.log(id, loginId);
   useEffect(() => {
     axios
       .get("http://localhost:5000/admin/team")
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
@@ -35,7 +35,7 @@ const AdminData = () => {
         .get(`http://localhost:5000/admin/team/${id}`)
         .then((res) => {
           setSingleData(res.data);
-          console.log("Single Data: ", res.data);
+          // console.log("Single Data: ", res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -62,7 +62,7 @@ const AdminData = () => {
     re_new_password: "",
   });
 
-  console.log(formData);
+  // console.log(formData);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -88,14 +88,14 @@ const AdminData = () => {
     axios
       .put(`http://localhost:5000/admin/changeAdminPassword/${id}`, formData)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.message == "Password changed successfully") {
-         swal.fire({
-           icon: "success",
-           title: "Success",
-           text: "Password changed successfully",
-           timer: 1000,
-         })
+          swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Password changed successfully",
+            timer: 1000,
+          });
         }
 
         setFormData({
@@ -112,6 +112,25 @@ const AdminData = () => {
         }
       });
   };
+
+  const [searchValue, setSearchValue] = useState("");
+  const [seratchResult, setSearchResult] = useState([]);
+  const handleSearchChange = (e) => {
+    const searchTerm = e.target.value;
+    setSearchValue(searchTerm);
+    axios
+      .get(`http://localhost:5000/admin/search/${searchTerm}`)
+      .then((res) => {
+        setSearchResult(res.data);
+        console.log("Search Result: ", res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // console.log("Search values: ",searchTerm);
+  };
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -136,81 +155,164 @@ const AdminData = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Type here..."
+                placeholder="Search admins..."
+                onChange={handleSearchChange}
               />
             </div>
             <div className="row mt-3">
               <div className="col-lg-6 col-md-12">
-                <div className="card mb-4">
-                  <div
-                    className="card-header pb-0"
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <h6>Team Members</h6>
-                  </div>
-                  <div className="card-body px-0 pt-0 pb-2">
-                    <div className="table-responsive p-0">
-                      <table className="table align-items-center mb-0">
-                        <thead>
-                          <tr>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                              Admins
-                            </th>
-                            <th className="text-secondary opacity-7" />
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.map((item, index) => (
-                            <tr key={item.id}>
-                              <td>
-                                <div className="d-flex px-2 py-1">
-                                  <Link to={`/admin-data/${item.id}`}>
-                                    <div>
-                                      <span className="text-xs text-secondary mb-0 me-2">
-                                        {index + 1}.{" "}
-                                      </span>
-                                      {item.pfpImage ? (
-                                        <img
-                                          src={item.pfpImage}
-                                          className="avatar avatar-sm me-3"
-                                          style={{ objectFit: "cover" }}
-                                          alt="user1"
-                                        />
-                                      ) : (
-                                        <img
-                                          src="../assets/img/team-2.jpg"
-                                          className="avatar avatar-sm me-3"
-                                          alt="user1"
-                                        />
-                                      )}
-                                    </div>
-                                  </Link>
-                                  <div className="d-flex flex-column justify-content-center">
-                                    <Link to={`/admin-data/${item.id}`}>
-                                      <h6 className="mb-0 text-sm">
-                                        {item.name}
-                                      </h6>
-                                      <p className="text-xs text-secondary mb-0">
-                                        {item.email}
-                                      </p>
-                                    </Link>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <Link to={`/admin-data/${item.id}`}>
-                                  <span className="text-secondary font-weight-bold text-xs">
-                                    View
-                                  </span>
-                                </Link>
-                              </td>
+                {searchValue.length === 0 && (
+                  <div className="card mb-4">
+                    <div
+                      className="card-header pb-0"
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <h6>Team Members</h6>
+                      
+                    </div>
+                    <div className="card-body px-0 pt-0 pb-2">
+                      <div className="table-responsive p-0">
+                        <table className="table align-items-center mb-0">
+                          <thead>
+                            <tr>
+                              <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Admins
+                              </th>
+                              <th className="text-secondary opacity-7" />
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {data.map((item, index) => (
+                              <tr key={item.id}>
+                                <td>
+                                  <div className="d-flex px-2 py-1">
+                                    <Link to={`/admin-data/${item.id}`}>
+                                      <div>
+                                        <span className="text-xs text-secondary mb-0 me-2">
+                                          {index + 1}.{" "}
+                                        </span>
+                                        {item.pfpImage ? (
+                                          <img
+                                            src={item.pfpImage}
+                                            className="avatar avatar-sm me-3"
+                                            style={{ objectFit: "cover" }}
+                                            alt="user1"
+                                          />
+                                        ) : (
+                                          <img
+                                            src="../assets/img/team-2.jpg"
+                                            className="avatar avatar-sm me-3"
+                                            alt="user1"
+                                          />
+                                        )}
+                                      </div>
+                                    </Link>
+                                    <div className="d-flex flex-column justify-content-center">
+                                      <Link to={`/admin-data/${item.id}`}>
+                                        <h6 className="mb-0 text-sm">
+                                          {item.name}
+                                        </h6>
+                                        <p className="text-xs text-secondary mb-0">
+                                          {item.email}
+                                        </p>
+                                      </Link>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <Link to={`/admin-data/${item.id}`}>
+                                    <span className="text-secondary font-weight-bold text-xs">
+                                      View
+                                    </span>
+                                  </Link>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+                
+
+                {searchValue.length > 0 && (
+                  <div className="card mb-4">
+                    <div
+                      className="card-header pb-0"
+                      style={{
+                        display: "flex",
+                      }}
+                    >
+                      <h6  className=" me-2">Your Search </h6> {seratchResult.length === 0 && <h6 className="text-secondary"> (No results found)</h6>}
+                    </div>
+                    <div className="card-body px-0 pt-0 pb-2">
+                      <div className="table-responsive p-0">
+                        <table className="table align-items-center mb-0">
+                          <thead>
+                            <tr>
+                              <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Admins
+                              </th>
+                              <th className="text-secondary opacity-7" />
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {seratchResult.map((item, index) => (
+                              <tr key={item.id}>
+                                <td>
+                                  <div className="d-flex px-2 py-1">
+                                    <Link to={`/admin-data/${item.id}`}>
+                                      <div>
+                                        <span className="text-xs text-secondary mb-0 me-2">
+                                          {index + 1}.{" "}
+                                        </span>
+                                        {item.pfpImage ? (
+                                          <img
+                                            src={item.pfpImage}
+                                            className="avatar avatar-sm me-3"
+                                            style={{ objectFit: "cover" }}
+                                            alt="user1"
+                                          />
+                                        ) : (
+                                          <img
+                                            src="../assets/img/team-2.jpg"
+                                            className="avatar avatar-sm me-3"
+                                            alt="user1"
+                                          />
+                                        )}
+                                      </div>
+                                    </Link>
+                                    <div className="d-flex flex-column justify-content-center">
+                                      <Link to={`/admin-data/${item.id}`}>
+                                        <h6 className="mb-0 text-sm">
+                                          {item.name}
+                                        </h6>
+                                        <p className="text-xs text-secondary mb-0">
+                                          {item.email}
+                                        </p>
+                                      </Link>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <Link to={`/admin-data/${item.id}`}>
+                                    <span className="text-secondary font-weight-bold text-xs">
+                                      View
+                                    </span>
+                                  </Link>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="col-lg-6 col-md-12">
@@ -219,14 +321,12 @@ const AdminData = () => {
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
                         <h5 className="text-capitalize">
-                          Username: {singleData.name} 
+                          Username: {singleData.name}
                           {String(loginId) === String(id) ? (
-                            <span style={{ marginLeft: "10px" }}>
-                              (You)
-                            </span>
-                      ) : (
-                        ""
-                      )}
+                            <span style={{ marginLeft: "10px" }}>(You)</span>
+                          ) : (
+                            ""
+                          )}
                         </h5>
                         <small>
                           {singleData.description === null
@@ -401,7 +501,6 @@ const AdminData = () => {
                               )}
                             </div>
                             <div class="modal-footer">
-                              
                               <button type="submit" className="btn btn-primary">
                                 Save changes
                               </button>
