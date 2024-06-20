@@ -18,6 +18,7 @@ router.get("/team/:id" , adminController.teamDataById);
 router.delete("/team/delete/:id" , adminController.adminDelete);
 router.put("/changeAdminPassword/:id"  , adminController.changeAdminPassword);
 router.get("/search/:key"  , adminController.adminSearch);
+router.put("/imageDel/:id"  , adminController.imageDel);
 
 
 

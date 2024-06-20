@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
+import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [adminData, setAdminData] = useState([]);
   useEffect(() => {
@@ -47,6 +48,7 @@ const Dashboard = () => {
                 <div className="card-body p-3">
                   <div className="row">
                     <div className="col-8">
+                      <Link to="/customers">
                       <div className="numbers">
                         <p className="text-sm mb-0 text-capitalize font-weight-bold">
                         Total Users
@@ -56,6 +58,7 @@ const Dashboard = () => {
                           
                         </h5>
                       </div>
+                      </Link>
                     </div>
                     <div className="col-4 text-end">
                       <div className="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">

@@ -94,7 +94,7 @@ const Team = () => {
                                           />
                                         ) : (
                                           <img
-                                            src="../assets/img/team-2.jpg"
+                                            src="../assets/img/no-dp.jpg"
                                             className="avatar avatar-sm me-3"
                                             alt="user1"
                                           />

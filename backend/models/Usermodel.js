@@ -20,7 +20,7 @@ const userModel = sequelize.define(
       allowNull: false,
     },
     contact: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true,
       // Add length constraint if necessary
     },

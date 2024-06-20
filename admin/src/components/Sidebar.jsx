@@ -6,15 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
-
   const [adminData, setAdminData] = useState({});
-  const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
+  const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
       .get("http://localhost:5000/admin/decodedToken", {
-        headers: { Authorization: token }
+        headers: { Authorization: token },
       })
       .then((res) => {
         setLoginId(res.data.id);
@@ -24,12 +23,11 @@ const Sidebar = () => {
       });
   }, []);
 
- 
   useEffect(() => {
     if (loginId) {
       axios
         .get("http://localhost:5000/admin/adminInfo", {
-          headers: { Authorization: ` ${loginId}` } // Corrected usage of loginId
+          headers: { Authorization: ` ${loginId}` }, // Corrected usage of loginId
         })
         .then((res) => {
           setAdminData(res.data);
@@ -39,8 +37,6 @@ const Sidebar = () => {
         });
     }
   }, [loginId]);
-
-
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -319,68 +315,158 @@ const Sidebar = () => {
 
           {/* Add Member */}
 
-         {adminData.role === "super-admin" && (
-           <li className="nav-item">
-           <Link
-             to={"/team-management"}
-             className={
-               location.pathname === "/team-management"
-                 ? "nav-link active"
-                 : "nav-link"
-             }
-           >
-             <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-               <svg
-                 xmlns="http://www.w3.org/2000/svg"
-                 viewBox="0 0 640 512"
-                 color=""
-                 className={
-                   location.pathname === "/team-management"
-                     ? "text-light"
-                     : "text-dark"
-                 }
-               >
-                 <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-               </svg>
-             </div>
-             <span className="nav-link-text ms-1">Team Management</span>
-           </Link>
-         </li>
-         )}
+          {adminData.role === "super-admin" && (
+            <li className="nav-item">
+              <Link
+                to={"/team-management"}
+                className={
+                  location.pathname === "/team-management"
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
+                <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 640 512"
+                    color=""
+                    className={
+                      location.pathname === "/team-management"
+                        ? "text-light"
+                        : "text-dark"
+                    }
+                  >
+                    <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+                  </svg>
+                </div>
+                <span className="nav-link-text ms-1">Team Management</span>
+              </Link>
+            </li>
+          )}
           <li>
             <hr className="horizontal dark" />
             <h6 className="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-8">
               User
             </h6>
           </li>
+
+          <li className="nav-item mb-0">
+            <div className="accordion" id="accordionExample">
+              <div className="nav-link  m-0" id="headingOne">
+                <button
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    marginLeft: "0",
+                    marginBottom: "-12px",
+                  }}
+                  className="nav-link"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 640 512"
+                      color=""
+                      className={"text-dark"}
+                    >
+                      <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                    </svg>
+                  </div>
+                  <span className="nav-link-text ms-1">Providers</span>
+                </button>
+              </div>
+
+              <div
+                id="collapseOne"
+                className="collapse show"
+                aria-labelledby="headingOne"
+                data-parent="#accordionExample"
+              >
+                <div
+                  className="card-body "
+                  style={{ width: "90%", margin: "auto" }}
+                >
+                  <ul style={{ listStyle: "none" }}>
+                    <Link to="/providerList">
+                      <li className="mb-3 mt-3 d-flex cursor-pointer">
+                        <div className={location.pathname === '/providerList'  ? "icon icon-shape icon-sm shadow border-radius-md bg-primary cursor-pointer text-center me-2 d-flex align-items-center justify-content-center p-0" :" icon icon-shape icon-sm shadow border-radius-md bg-white cursor-pointer text-center me-2 d-flex align-items-center justify-content-center p-0"}>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 640 512"
+                            style={{
+                              width: "18px",
+                              height: "18px",
+                              marginLeft: "25%",
+                            }}
+                          >
+                            <path
+                              fill={location.pathname === '/providerList'  ? "white" :"grey"}
+                              d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
+                            />
+                          </svg>
+                        </div>
+                        Provider List
+                      </li>
+                    </Link>
+
+                    <li className="mb-3 mt-3 d-flex cursor-pointer">
+                      <div className="icon icon-shape icon-sm shadow border-radius-md bg-white  text-center me-2 d-flex align-items-center justify-content-center p-0">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 640 512"
+                          style={{
+                            width: "18px",
+                            height: "18px",
+                            marginLeft: "25%",
+                          }}
+                        >
+                          <path
+                            fill="grey"
+                            d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"
+                          />
+                        </svg>
+                      </div>
+                      Provider Request List
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+
           {/* Customer */}
 
           <li className="nav-item">
-           <Link
-             to={"/customers"}
-             className={
-               location.pathname === "/customers"
-                 ? "nav-link active"
-                 : "nav-link"
-             }
-           >
-             <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-               <svg
-                 xmlns="http://www.w3.org/2000/svg"
-                 viewBox="0 0 640 512"
-                 color=""
-                 className={
-                   location.pathname === "/customers"
-                     ? "text-light"
-                     : "text-dark"
-                 }
-               >
-                 <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-               </svg>
-             </div>
-             <span className="nav-link-text ms-1">Customers</span>
-           </Link>
-         </li>
+            <Link
+              to={"/customers"}
+              className={
+                location.pathname === "/customers"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 640 512"
+                  color=""
+                  className={
+                    location.pathname === "/customers"
+                      ? "text-light"
+                      : "text-dark"
+                  }
+                >
+                  <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+                </svg>
+              </div>
+              <span className="nav-link-text ms-1">Customers</span>
+            </Link>
+          </li>
 
           {/* Logout */}
           <li className="nav-item">
@@ -431,47 +517,6 @@ const Sidebar = () => {
           </li>
         </ul>
       </div>
-
-      {/* <div className="sidenav-footer mx-3 ">
-        <div
-          className="card card-background shadow-none card-background-mask-secondary"
-          id="sidenavCard"
-        >
-          <div
-            className="full-background"
-            style={{
-              backgroundImage:
-                'url("../assets/img/curved-images/white-curved.jpg")',
-            }}
-          />
-          <div className="card-body text-start p-3 w-100">
-            <div className="icon icon-shape icon-sm bg-white shadow text-center mb-3 d-flex align-items-center justify-content-center border-radius-md">
-              <i
-                className="ni ni-diamond text-dark text-gradient text-lg top-0"
-                aria-hidden="true"
-                id="sidenavCardIcon"
-              />
-            </div>
-            <div className="docs-info">
-              <h6 className="text-white up mb-0">Need help?</h6>
-              <p className="text-xs font-weight-bold">Please check our docs</p>
-              <a
-                href="https://www.creative-tim.com/learning-lab/bootstrap/license/soft-ui-dashboard"
-                target="_blank"
-                className="btn btn-white btn-sm w-100 mb-0"
-              >
-                Documentation
-              </a>
-            </div>
-          </div>
-        </div>
-        <a
-          className="btn bg-gradient-primary mt-3 w-100"
-          href="https://www.creative-tim.com/product/soft-ui-dashboard-pro?ref=sidebarfree"
-        >
-          Upgrade to pro
-        </a>
-      </div> */}
     </aside>
   );
 };

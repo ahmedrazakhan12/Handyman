@@ -169,6 +169,7 @@ const AddCustomer = () => {
                         <label htmlFor="">Image</label>
                         <input
                           className="form-control"
+                          accept="image/png, image/jpeg"
                           type="file"
                           name="pfpImage"
                           onChange={handleChange}

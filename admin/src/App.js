@@ -17,7 +17,10 @@ import EditAdmins from "./edit/EditAdmins";
 import AdminData from "./pages/AdminData";
 import Users from "./pages/Users";
 import AddCustomer from "./pages/AddCustomer";
-
+import UserData from "./pages/UserData";
+import EditCustomer from "./edit/EditCustomer";
+import ProviderList from "./pages/ProviderList";
+import AddProvider from "./pages/AddProvider";
 function App() {
   const [adminData, setAdminData] = useState({});
   const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
@@ -71,6 +74,10 @@ function App() {
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/customers" element={<Users />} />
             <Route path="/add-customer" element={<AddCustomer />} />
+            <Route path="/user-data/:id" element={<UserData />} />
+            <Route path="/edit-customer/:id" element={<EditCustomer />} />
+            <Route path="/providerList" element={<ProviderList />} />
+            <Route path="/add-provider" element={<AddProvider />} />
           </Routes>
       
     </div>

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [adminData, setAdminData] = useState({});
-  const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
+  const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
   const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
       .get("http://localhost:5000/admin/decodedToken", {
-        headers: { Authorization: token }
+        headers: { Authorization: token },
       })
       .then((res) => {
         setLoginId(res.data.id);
@@ -21,12 +21,11 @@ const Navbar = () => {
       });
   }, []);
 
- 
   useEffect(() => {
     if (loginId) {
       axios
         .get("http://localhost:5000/admin/adminInfo", {
-          headers: { Authorization: ` ${loginId}` } // Corrected usage of loginId
+          headers: { Authorization: ` ${loginId}` }, // Corrected usage of loginId
         })
         .then((res) => {
           setAdminData(res.data);
@@ -39,25 +38,25 @@ const Navbar = () => {
 
   let label;
 
-switch (location.pathname) {
-  case '/profile/setting':
-    label = 'Profile Setting';
-    break;
-    case '/profile/add-member':
-    label = 'Team Register';
-    break;
-  case '/':
-    label = 'Dashboard';
-    break;
-  case '/profile':
-    label = 'Profile';
-    break;
-  case '/team-management':
-    label = 'Team Management';
-    break;
-  default:
-    label = '';
-}
+  switch (location.pathname) {
+    case "/profile/setting":
+      label = "Profile Setting";
+      break;
+    case "/profile/add-member":
+      label = "Team Register";
+      break;
+    case "/":
+      label = "Dashboard";
+      break;
+    case "/profile":
+      label = "Profile";
+      break;
+    case "/team-management":
+      label = "Team Management";
+      break;
+    default:
+      label = "";
+  }
 
   return (
     <nav
@@ -67,29 +66,38 @@ switch (location.pathname) {
     >
       <div className="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
-         
-          <h6 className="font-weight-bolder mb-0 "><span className="text-capitalize">{adminData.name}</span>'s {label}</h6>
+          <h6 className="font-weight-bolder mb-0 ">
+            <span className="text-capitalize">{adminData.name}</span>'s {label}
+          </h6>
         </nav>
         <div
           className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
           id="navbar"
         >
-           <div className="ms-md-auto pe-md-3 d-flex align-items-center">
-          
-          </div>
+          <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
           <ul className="navbar-nav  justify-content-end">
-           
             <li className="nav-item d-flex align-items-center ">
-            <div className="input-group">
-              <span className="input-group-text text-body">
-                <i className="fas fa-search" aria-hidden="true" />
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Type here..."
-              />
-            </div>
+              <Link to={`/profile`}>
+                {adminData.pfpImage ? (
+                  <img
+                    src={adminData.pfpImage}
+                    className="avatar   img-thumbnail"
+                    alt="avatar"
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src="../assets/img/no-dp.jpg"
+                    className="avatar img-thumbnail "
+                    alt="avatar"
+                    style={{ width: "50px", height: "50px" }}
+                  />
+                )}
+              </Link>
               {/* <a
                 className="btn btn-outline-primary btn-sm mb-0 me-3"
                 target="_blank"
@@ -109,10 +117,7 @@ switch (location.pathname) {
             </li> */}
             {/* Toggler */}
             <li className="nav-item d-xl-none ps-3 d-flex align-items-center">
-              <a
-                className="nav-link text-body p-0"
-                id="iconNavbarSidenav"
-              >
+              <a className="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div className="sidenav-toggler-inner">
                   <i className="sidenav-toggler-line" />
                   <i className="sidenav-toggler-line" />

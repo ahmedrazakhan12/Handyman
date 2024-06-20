@@ -140,7 +140,7 @@ const AdminData = () => {
         <div className="container-fluid py-4  main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
           <div className="content w-100">
             <div className="d-flex justify-content-between align-items-center">
-              <h4>Users &amp; Profiles</h4>
+              <h4>Admins &amp; Profiles</h4>
               <button
                 className="btn btn-primary"
                 onClick={() => navigate("/add-member")}

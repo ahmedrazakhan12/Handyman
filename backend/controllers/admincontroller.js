@@ -279,7 +279,7 @@ exports.changeAdminPassword = async (req, res) => {
     return res.status(500).json({ message: "Failed to change admin password" });
   }
 };
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 
 exports.adminSearch = async (req, res) => {
   try {
@@ -293,5 +293,15 @@ exports.adminSearch = async (req, res) => {
   } catch (error) {
     console.error("Error in finding admins:", error);
     return res.status(500).json({ message: "Failed to find admins" });
+  }
+};
+
+exports.imageDel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await adminModel.update({ pfpImage: null }, { where: { id: id } });
+    console.log("image deleted")
+  } catch (err) {
+    console.log(err)
   }
 };

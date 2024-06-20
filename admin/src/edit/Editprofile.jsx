@@ -3,7 +3,10 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import "../App.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Editprofile = () => {
   const [username, setUsername] = useState("");
@@ -11,13 +14,13 @@ const Editprofile = () => {
   const [description, setDescription] = useState("");
   const [pfpImage, setPfpImage] = useState(null);
   const [adminData, setAdminData] = useState({});
-  const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
+  const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
       .get("http://localhost:5000/admin/decodedToken", {
-        headers: { Authorization: token }
+        headers: { Authorization: token },
       })
       .then((res) => {
         setLoginId(res.data.id);
@@ -31,7 +34,7 @@ const Editprofile = () => {
     if (loginId) {
       axios
         .get("http://localhost:5000/admin/adminInfo", {
-          headers: { Authorization: ` ${loginId}` }
+          headers: { Authorization: ` ${loginId}` },
         })
         .then((res) => {
           console.log(res.data);
@@ -63,8 +66,10 @@ const Editprofile = () => {
     }
   };
 
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    setImagePreviewUrl(URL.createObjectURL(file)); // Create a URL for the selected file
     setPfpImage(file);
   };
 
@@ -94,7 +99,40 @@ const Editprofile = () => {
       console.error("Failed to Edit-Profile: ", error);
     }
   };
+  const handleImageDelete = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete the profile image?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setImagePreviewUrl("../assets/img/no-dp.jpg");
+        axios
+          .put(`http://localhost:5000/admin/imageDel/${adminData.id}`)
+          .then((res) => {
+            Swal.fire(
+              "Deleted!",
+              "Your profile image has been deleted.",
+              "success"
+            );
 
+            console.log("Image Removed: ", res.data);
+          })
+          .catch((err) => {
+            Swal.fire(
+              "Error!",
+              "There was an error deleting your profile image.",
+              "error"
+            );
+            console.log(err);
+          });
+      }
+    });
+  };
   return (
     <>
       <Sidebar />
@@ -106,20 +144,32 @@ const Editprofile = () => {
             <form className="form-horizontal" onSubmit={handleSubmit}>
               <div className="form-flex-container">
                 <div className="panel panel-default">
-                  <div className="panel-body text-center">
-                    {adminData.pfpImage ? (
-                      <img
-                      src={adminData.pfpImage}
+                  <div
+                    className="panel-body text-center "
+                    style={{ position: "relative" }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      style={{
+                        fontSize: "24px",
+                        color: "white",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "7%",
+                        left: "92%",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                      onClick={handleImageDelete}
+                    />
+                    <img
+                      src={
+                        imagePreviewUrl ||
+                        adminData.pfpImage ||
+                        "../assets/img/no-dp.jpg"
+                      }
                       className="img-thumbnail"
                       alt="User avatar"
                     />
-                    ): (
-                      <img
-                        src="https://via.placeholder.com/150"
-                        className="img-thumbnail"
-                        alt="User avatar"
-                      />
-                    )}
                   </div>
                 </div>
                 <div className="form-flex-item">
@@ -164,16 +214,22 @@ const Editprofile = () => {
                           className="form-control"
                           style={{ height: "180px" }}
                           name="description"
-                          placeholder={description === 'null' ? "No Description" : ''}
-                          value={description === 'null' ? '' : description}
+                          placeholder={
+                            description === "null" ? "No Description" : ""
+                          }
+                          value={description === "null" ? "" : description}
                           onChange={handleChange}
                         ></textarea>
                       </div>
                       <div className="form-group ">
-                        <button type="submit" className="btn btn-primary me-3" >
+                        <button type="submit" className="btn btn-primary me-3">
                           Submit
                         </button>
-                        <button type="reset" className="btn btn-default" onClick={() => navigate("/profile")}>
+                        <button
+                          type="reset"
+                          className="btn btn-default"
+                          onClick={() => navigate("/profile")}
+                        >
                           Cancel
                         </button>
                       </div>

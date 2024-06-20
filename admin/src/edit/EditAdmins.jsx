@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -68,8 +68,10 @@ const Editprofile = () => {
     }
   };
 
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    setImagePreviewUrl(URL.createObjectURL(file)); // Create a URL for the selected file
     setPfpImage(file);
   };
 
@@ -100,58 +102,89 @@ const Editprofile = () => {
     }
   };
 
-
   const handleDelete = async (id) => {
     try {
       const result = await Swal.fire({
-        title: 'Are you sure?',
+        title: "Are you sure?",
         text: "You won't be able to revert this!",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:5000/admin/team/delete/${adminData.id}`);
+        await axios.delete(
+          `http://localhost:5000/admin/team/delete/${adminData.id}`
+        );
         Swal.fire({
           title: "Deleted!",
           text: "The admin has been deleted.",
           icon: "success",
           timer: 1000,
         });
-        
+
         navigate("/team-management");
       }
     } catch (error) {
       console.error("Failed to delete admin:", error);
-      Swal.fire(
-        'Error!',
-        'Failed to delete admin.',
-        'error'
-      );
+      Swal.fire("Error!", "Failed to delete admin.", "error");
     }
   };
+  const handleImageDelete = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete the profile image?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setImagePreviewUrl("../assets/img/no-dp.jpg");
+        axios
+          .put(`http://localhost:5000/admin/imageDel/${adminData.id}`)
+          .then((res) => {
+            Swal.fire(
+              "Deleted!",
+              "Your profile image has been deleted.",
+              "success"
+            );
 
-
+            console.log("Image Removed: ", res.data);
+          })
+          .catch((err) => {
+            Swal.fire(
+              "Error!",
+              "There was an error deleting your profile image.",
+              "error"
+            );
+            console.log(err);
+          });
+      }
+    });
+  };
 
   return (
     <>
       <Sidebar />
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-        <div className="d-flex justify-content-between align-items-center me-5" >
-        <h3
-          className="text-uppercase"
-          style={{ marginLeft: "32px", marginTop: "12px" }}
-        >
-          Edit {adminData.name}
-        </h3>
-        <h3
-        >
-      <FontAwesomeIcon icon={faTrash} style={{ fontSize: '24px', color: '#AB1402', cursor: 'pointer' }} onClick={handleDelete} />
-
-        </h3>
+        <div className="d-flex justify-content-between align-items-center me-5">
+          <h3
+            className="text-uppercase"
+            style={{ marginLeft: "32px", marginTop: "12px" }}
+          >
+            Edit {adminData.name}
+          </h3>
+          <h3>
+            <FontAwesomeIcon
+              icon={faTrash}
+              style={{ fontSize: "24px", color: "#AB1402", cursor: "pointer" }}
+              onClick={handleDelete}
+            />
+          </h3>
         </div>
         <div className="container-fluid main-content position-relative">
           <div className="row d-flex justify-content-center align-items-center h-100">
@@ -161,15 +194,33 @@ const Editprofile = () => {
                 style={{ overflow: "hidden", borderRadius: ".5rem" }}
               >
                 <div className="row g-0">
-                  <div className="col-xl-6">
+                  <div className="col-xl-6" style={{ position: "relative" }}>
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      style={{
+                        fontSize: "24px",
+                        color: "white",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "3%",
+                        left: "95%",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                      onClick={handleImageDelete}
+                    />
                     <img
-                      src={adminData.pfpImage || "../assets/img/team-2.jpg"}
+                      src={
+                        imagePreviewUrl ||
+                        adminData.pfpImage ||
+                        "../assets/img/no-dp.jpg"
+                      }
                       alt="Sample photo"
                       className="img-fluid"
                       style={{
-                        height: "700px",
+                        height: "100%",
                         width: "100%",
                         objectFit: "cover",
+                        objectPosition: "center",
                       }}
                     />
                   </div>
@@ -246,7 +297,13 @@ const Editprofile = () => {
                             className="form-control"
                             style={{ height: "295px" }}
                             name="description"
-                            value={description === 'null' || description === null || description === undefined ? "" : description}
+                            value={
+                              description === "null" ||
+                              description === null ||
+                              description === undefined
+                                ? ""
+                                : description
+                            }
                             onChange={handleChange}
                           ></textarea>
                         </div>

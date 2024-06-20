@@ -13,7 +13,6 @@ const Users = () => {
     axios
       .get("http://localhost:5000/user/users")
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
@@ -21,6 +20,18 @@ const Users = () => {
       });
   }, []);
 
+  const handleSearchChange = (e) => {
+    const searchTerm = e.target.value;
+    axios
+      .get(`http://localhost:5000/user/search/${searchTerm}`)
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <Sidebar />
@@ -64,15 +75,27 @@ const Users = () => {
           </div>
 
           {/* table */}
-         
 
-          <div className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg">
-            <div className="table-responsive p-2">
-              <table className="table align-items-center mb-0  " >
-                <thead >
-                  
-                  <tr >
-                    <th style={{ width: "5px"  }}></th>
+          <div className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg"  style={{maxHeight:'90vh' , overflow:'scroll'}}>
+            <div className="table-responsive p-2   ">
+            
+                <div style={{float:'right'}}>
+                  <div className="input-group   p-1">
+                    <span className="input-group-text text-body">
+                      <i className="fas fa-search" aria-hidden="true" />
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Type here..."
+                      onChange={handleSearchChange}
+                    />
+                  </div>
+                </div>
+                <table className="table align-items-center  ">
+                <thead>
+                  <tr>
+                    <th style={{ width: "5px" }}></th>
                     <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                       Name
                     </th>
@@ -97,36 +120,37 @@ const Users = () => {
                     <tbody>
                       <>
                         <tr>
-                          <td>
-                          {index + 1}.
-                          </td>
+                          <td>{index + 1}.</td>
                           <td>
                             <div className="d-flex px-2 py-1">
-                              <div>
-                               
-                                <span className="text-xs text-secondary mb-0 me-2"></span>
-                                {item.pfpImage ? (
-                                  <img
-                                    src={item.pfpImage}
-                                    className="avatar avatar-sm me-3 "
-                                    style={{ objectFit: "cover" }}
-                                    alt="user1"
-                                  />
-                                ) : (
-                                  <img
-                                    src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    className="avatar avatar-sm me-3"
-                                    alt="user1"
-                                  />
-                                )}
-                              </div>
+                              <Link to={`/user-data/${item.id}`}>
+                                <div>
+                                  <span className="text-xs text-secondary mb-0 me-2"></span>
+                                  {item.pfpImage ? (
+                                    <img
+                                      src={item.pfpImage}
+                                      className="avatar avatar-sm me-3 "
+                                      style={{ objectFit: "cover" }}
+                                      alt="user1"
+                                    />
+                                  ) : (
+                                    <img
+                                      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                      className="avatar avatar-sm me-3"
+                                      alt="user1"
+                                    />
+                                  )}
+                                </div>
+                              </Link>
                               <div className="d-flex flex-column justify-content-center">
-                                <h6 className="mb-0 text-sm text-capitalize">
-                                  {item.name}
-                                </h6>
-                                <p className="text-xs text-secondary mb-0">
-                                  {item.email}
-                                </p>
+                                <Link to={`/user-data/${item.id}`}>
+                                  <h6 className="mb-0 text-sm text-capitalize">
+                                    {item.name}
+                                  </h6>
+                                  <p className="text-xs text-secondary mb-0">
+                                    {item.email}
+                                  </p>
+                                </Link>
                               </div>
                             </div>
                           </td>
@@ -146,7 +170,18 @@ const Users = () => {
                               {item.address}
                             </span>
                           </td>
-                          <td className="align-middle"></td>
+                          <td className="align-middle text-center">
+                            <span className="text-secondary text-xs font-weight-bold">
+                              <button
+                                className="btn btn-primary "
+                                onClick={() =>
+                                  navigate(`/edit-customer/${item.id}`)
+                                }
+                              >
+                                Edit
+                              </button>
+                            </span>
+                          </td>
                         </tr>
                       </>
                     </tbody>
