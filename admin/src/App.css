@@ -25,7 +25,7 @@
   
   .editProfile .panel {
     width: 100%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0,  0,  0,  0.1);
   }
   
   .editProfile  .panel-body .img-thumbnail {
@@ -102,4 +102,24 @@
   height: 100px;
   background: #dedede;
   border-radius: 20px;
+}
+
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease; /* Transition for opacity change */
+}
+
+.col-lg-3 {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease; /* Transition for container */
 }

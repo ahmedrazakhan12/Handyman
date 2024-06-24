@@ -9,6 +9,7 @@ import {
   RegionDropdown,
   CountryRegionData,
 } from "react-country-region-selector";
+import "../App.css";
 
 const AddProvider = () => {
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ const AddProvider = () => {
       .then((res) => {
         console.log(res.data);
         setErrorMessage(null);
-        navigate("/customers");
+        navigate("/providerList");
         swal.fire({
           icon: "success",
           title: "Success",
@@ -113,7 +114,15 @@ const AddProvider = () => {
         console.error(err);
       });
   };
+  const [isHovered, setIsHovered] = useState(false);
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   return (
     <>
       <Sidebar />
@@ -128,7 +137,9 @@ const AddProvider = () => {
             >
               <div className="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
-                  <h6 className="font-weight-bolder mb-0 ">Provider | Provider Lists | Add New Provider</h6>
+                  <h6 className="font-weight-bolder mb-0 ">
+                    Provider | Provider Lists | Add New Provider
+                  </h6>
                 </nav>
                 <div
                   className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
@@ -167,9 +178,70 @@ const AddProvider = () => {
             <form onSubmit={handleSubmit} encType="multipart/form-data">
               <div className="container">
                 <div className="row">
+                  <div
+                    className="col-lg-3 mt-1"
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                      transition: "all 0.3s ease", // Added transition for the container
+                    }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div
+                      className="hover-overlay img-thumbnail"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "90%",
+                        marginLeft: "5%",
+                        height: "100%",
+                        backgroundColor: "black",
+                        opacity: isHovered ? 0.8 : 0, // Adjust opacity based on isHovered state
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        transition: "opacity 0.3s ease", // Added transition for opacity change
+                        // overflow:'hidden'
+                      }}
+                    >
+                      <input
+                        type="file"
+                        style={{
+                          width: "100%",
+                          position: "absolute",
+                          height: "100%",
+                          cursor: "pointer",
+                          opacity: 0,
+                        }}
+                        accept="image/png, image/jpeg"
+                        name="pfpImage"
+                        onChange={handleChange}
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                        // Adjust opacity based on isHovered state
+                        style={{ width: "10vw", fill: "white" }}
+                      >
+                        <path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z" />
+                      </svg>
+                    </div>
+                    <img
+                      src={imagePreviewUrl}
+                      className="img-thumbnail"
+                      alt="Preview"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
                   <div className="col-lg-9">
                     <div className="row">
-                      <div className="col-lg-12">
+                      <div className="col-lg-6">
                         <label htmlFor="">Name</label>
                         <input
                           className="form-control"
@@ -179,7 +251,7 @@ const AddProvider = () => {
                           required
                         />
                       </div>
-                      <div className="col-lg-12">
+                      <div className="col-lg-6">
                         <label htmlFor="">Email</label>
                         <input
                           className="form-control"
@@ -189,7 +261,7 @@ const AddProvider = () => {
                           required
                         />
                       </div>
-                      <div className="col-lg-12">
+                      {/* <div className="col-lg-12">
                         <label htmlFor="">Image</label>
                         <input
                           className="form-control"
@@ -198,8 +270,8 @@ const AddProvider = () => {
                           name="pfpImage"
                           onChange={handleChange}
                         />
-                      </div>
-                      <div className="col-lg-12">
+                      </div> */}
+                      <div className="col-lg-6">
                         <label htmlFor="">Select Provider Type: </label>
                         <select
                           className="form-select w-150"
@@ -227,7 +299,7 @@ const AddProvider = () => {
                         </select>
                       </div>
 
-                      <div className="col-lg-12">
+                      <div className="col-lg-6">
                         <label htmlFor="">Contact Number</label>
                         <input
                           className="form-control"
@@ -237,51 +309,37 @@ const AddProvider = () => {
                           required
                         />
                       </div>
+                      <div className="col-lg-6 text-dark">
+                        <label htmlFor="">Select Country</label>
+                        <CountryDropdown
+                          className="form-control"
+                          value={formData.country}
+                          onChange={(val) => selectCountry(val)}
+                          required
+                        />
+                      </div>
+                      <div className="col-lg-6 text-primary">
+                        <label htmlFor="">Select Region</label>
+                        <RegionDropdown
+                          className="form-control"
+                          country={formData.country}
+                          value={formData.region}
+                          onChange={(val) => selectRegion(val)}
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="col-lg-3 mt-4">
-                    <img
-                      src={imagePreviewUrl}
-                      className="img-thumbnail"
-                      alt="Preview"
-                      style={{
-                        width: "100%",
-                        height: "340px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </div>
-
-                  <div className="col-lg-6 text-dark">
-                    <label htmlFor="">Select Country</label>
-                    <CountryDropdown
-                      className="form-control"
-                      value={formData.country}
-                      onChange={(val) => selectCountry(val)}
-                      required
-                    />
-                  </div>
-                  <div className="col-lg-6 text-primary">
-                    <label htmlFor="">Select Region</label>
-                    <RegionDropdown
-                      className="form-control"
-                      country={formData.country}
-                      value={formData.region}
-                      onChange={(val) => selectRegion(val)}
-                      required
-                    />
-                  </div>
-                  <div className="col-lg-12 text-warning">
-                    <label htmlFor="">Address</label>
-                    <textarea
-                      style={{ maxHeight: "200px", minHeight: "200px" }}
-                      className="form-control resizable-none"
-                      id=""
-                      name="address"
-                      required
-                      onChange={handleChange}
-                    ></textarea>
+                    <div className="col-lg-12 text-warning">
+                      <label htmlFor="">Address</label>
+                      <textarea
+                        style={{ maxHeight: "110px", minHeight: "110px" }}
+                        className="form-control resizable-none"
+                        id=""
+                        name="address"
+                        required
+                        onChange={handleChange}
+                      ></textarea>
+                    </div>
                   </div>
                 </div>
                 <div className="row">
