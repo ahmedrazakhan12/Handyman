@@ -1,3 +1,4 @@
+// middlewares/Multer.js
 const multer = require("multer");
 
 // Multer storage configuration
@@ -19,7 +20,7 @@ const fileFilter = (req, file, cb) => {
   ) {
     cb(null, true);
   } else {
-    cb(new Error("File type not supported"), false);
+    cb(new Error("File type not supported"));
   }
 };
 
@@ -27,7 +28,6 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-}).single("pfpImage"); // Assuming "pfpImage" is the field name for image upload
+}).single("pfpImage");
 
-
-module.exports = upload ;
+module.exports = upload;

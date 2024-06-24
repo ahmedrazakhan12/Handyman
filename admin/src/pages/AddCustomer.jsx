@@ -104,7 +104,9 @@ const AddCustomer = () => {
             >
               <div className="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
-                  <h6 className="font-weight-bolder mb-0 ">Add New Customer</h6>
+                  <h6 className="font-weight-bolder mb-0 ">
+                    Customers | Add New Customer
+                  </h6>
                 </nav>
                 <div
                   className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"

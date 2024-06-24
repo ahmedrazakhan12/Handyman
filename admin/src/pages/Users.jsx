@@ -48,7 +48,7 @@ const Users = () => {
                     fontSize: "20px",
                   }}
                 >
-                  Customer Lists
+                  Customers
                 </h5>
               </div>
               <div className="col-6">
@@ -173,7 +173,8 @@ const Users = () => {
                           <td className="align-middle text-center">
                             <span className="text-secondary text-xs font-weight-bold">
                               <button
-                                className="btn btn-primary "
+                                className="btn btn-primary"
+                                style={{paddingLeft:'25px' , paddingRight:'25px'}}   
                                 onClick={() =>
                                   navigate(`/edit-customer/${item.id}`)
                                 }

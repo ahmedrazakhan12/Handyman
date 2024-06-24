@@ -128,7 +128,7 @@ const AddProvider = () => {
             >
               <div className="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
-                  <h6 className="font-weight-bolder mb-0 ">Add New Provider</h6>
+                  <h6 className="font-weight-bolder mb-0 ">Provider | Provider Lists | Add New Provider</h6>
                 </nav>
                 <div
                   className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"

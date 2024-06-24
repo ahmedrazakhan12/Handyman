@@ -124,9 +124,7 @@ const EditCustomer = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(
-          `http://localhost:5000/user/delete/${adminData.id}`
-        );
+        await axios.delete(`http://localhost:5000/user/delete/${adminData.id}`);
         Swal.fire({
           title: "Deleted!",
           text: "The user has been deleted.",
@@ -180,62 +178,120 @@ const EditCustomer = () => {
     <>
       <Sidebar />
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-        <div className="d-flex justify-content-between align-items-center me-5">
-          <h3
-            className="text-uppercase"
-            style={{ marginLeft: "32px", marginTop: "12px" }}
-          >
-            Edit {adminData.name}
-          </h3>
-          <h3>
-            <FontAwesomeIcon
-              icon={faTrash}
-              style={{ fontSize: "24px", color: "#AB1402", cursor: "pointer" }}
-              onClick={handleDelete}
-            />
-          </h3>
-        </div>
+        
         <div className="container-fluid main-content position-relative">
+        <div className="card  card-body blur shadow-blur  p-0 overflow-hidden mt-3">
+            <nav
+              className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
+              id="navbarBlur"
+              navbar-scroll="true"
+            >
+              <div className="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                  <h6 className="font-weight-bolder mb-0 ">
+                    Customers | Edit Customer{" "}
+                  </h6>
+                </nav>
+                <div
+                  className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
+                  id="navbar"
+                >
+                  <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
+                  <ul className="navbar-nav  justify-content-end">
+                    <li className="nav-item d-flex align-items-center ">
+                      <button
+                        className="btn btn-primary m-0"
+                        onClick={() => navigate("/customers")}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={18}
+                          height={18}
+                          style={{ marginRight: "4px", marginTop: "-5px" }}
+                          viewBox="0 0 512 512"
+                        >
+                          <path
+                            fill="white"
+                            d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"
+                          />
+                        </svg>{" "}
+                        <span className="">Back</span>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          </div>
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col">
               <div
                 className="card card-registration my-4"
                 style={{ overflow: "hidden", borderRadius: ".5rem" }}
               >
-                <div className="row g-0">
-                  <div className="col-xl-6" style={{ position: "relative" }}>
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      style={{
-                        fontSize: "24px",
-                        color: "white",
-                        cursor: "pointer",
-                        position: "absolute",
-                        top: "3%",
-                        left: "95%",
-                        transform: "translate(-50%, -50%)",
-                      }}
-                      onClick={handleImageDelete}
-                    />
-                    <img
-                      src={
-                        imagePreviewUrl ||
-                        adminData.pfpImage ||
-                        "../assets/img/no-dp.jpg"
-                      }
-                      alt="Sample photo"
-                      className="img-fluid"
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        objectFit: "cover",
-                        objectPosition: "center",
-                      }}
-                    />
-                  </div>
-                  <div className="col-xl-6">
-                    <div className="card-body text-black">
-                      <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
+                  <div className="row g-0">
+                    <div className="col-xl-6" style={{ position: "relative" }}>
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        style={{
+                          fontSize: "24px",
+                          color: "white",
+                          cursor: "pointer",
+                          position: "absolute",
+                          top: "3%",
+                          left: "95%",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                        onClick={() => {
+                          if (adminData.pfpImage === null) {
+                            Swal.fire(
+                              "Error!",
+                              "Please upload a profile image.",
+                              "error"
+                            );
+                            return;
+                          }
+                          Swal.fire({
+                            title: "Are you sure?",
+                            text: "You are about to delete this item.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              setPfpImage("null1");
+                              setImagePreviewUrl("../assets/img/no-dp.jpg");
+                              // Swal.fire(
+                              //   'Deleted!',
+                              //   'Your item has been deleted.',
+                              //   'success'
+                              // );
+                              // Additional logic after confirmation
+                            }
+                          });
+                        }}
+                      />
+                      <img
+                        src={
+                          imagePreviewUrl ||
+                          adminData.pfpImage ||
+                          "../assets/img/no-dp.jpg"
+                        }
+                        alt="Sample photo"
+                        className="img-fluid"
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                      />
+                    </div>
+                    <div className="col-xl-6">
+                      <div className="card-body text-black">
                         <div className="row">
                           <div className="col-md-6">
                             <div className="form-outline">
@@ -328,10 +384,46 @@ const EditCustomer = () => {
                             </button>
                           </div>
                         </div>
-                      </form>
+                        <div className="row">
+                          <div className="col ">
+                            <button
+                              type="button"
+                              onClick={handleDelete}
+                              className="btn btn-danger btn-lg w-100 "
+                            >
+                              Delete Admin
+                            </button>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col ">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                Swal.fire({
+                                  title: "Unsaved Changes",
+                                  text: "Are you sure want to discard your changes?.",
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonColor: "#3085d6",
+                                  cancelButtonColor: "#d33",
+                                  confirmButtonText: "Yes, Unsaved it!",
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    navigate("/customers");
+                                  }
+                                });
+                              }}
+                              className="btn btn-secondary btn-lg w-100 "
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>

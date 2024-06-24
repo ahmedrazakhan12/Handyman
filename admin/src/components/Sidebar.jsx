@@ -394,7 +394,13 @@ const Sidebar = () => {
                   <ul style={{ listStyle: "none" }}>
                     <Link to="/providerList">
                       <li className="mb-3 mt-3 d-flex cursor-pointer">
-                        <div className={location.pathname === '/providerList'  ? "icon icon-shape icon-sm shadow border-radius-md bg-primary cursor-pointer text-center me-2 d-flex align-items-center justify-content-center p-0" :" icon icon-shape icon-sm shadow border-radius-md bg-white cursor-pointer text-center me-2 d-flex align-items-center justify-content-center p-0"}>
+                        <div
+                          className={
+                            location.pathname === "/providerList"
+                              ? "icon icon-shape icon-sm shadow border-radius-md bg-primary cursor-pointer text-center me-2 d-flex align-items-center justify-content-center p-0"
+                              : " icon icon-shape icon-sm shadow border-radius-md bg-white cursor-pointer text-center me-2 d-flex align-items-center justify-content-center p-0"
+                          }
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 640 512"
@@ -405,7 +411,11 @@ const Sidebar = () => {
                             }}
                           >
                             <path
-                              fill={location.pathname === '/providerList'  ? "white" :"grey"}
+                              fill={
+                                location.pathname === "/providerList"
+                                  ? "white"
+                                  : "grey"
+                              }
                               d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
                             />
                           </svg>

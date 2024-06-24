@@ -75,14 +75,14 @@ const Editprofile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
     formData.append("id", adminData.id);
     formData.append("username", username);
     formData.append("email", email);
     formData.append("description", description);
     formData.append("pfpImage", pfpImage);
-
+  
     try {
       const response = await axios.put(
         "http://localhost:5000/admin/editProfile",
@@ -96,43 +96,72 @@ const Editprofile = () => {
       console.log("Edit-Profile: ", response.data);
       navigate("/profile");
     } catch (error) {
-      console.error("Failed to Edit-Profile: ", error);
+        console.error("Error setting up the request:", error.message);
     }
   };
-  const handleImageDelete = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you really want to delete the profile image?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setImagePreviewUrl("../assets/img/no-dp.jpg");
-        axios
-          .put(`http://localhost:5000/admin/imageDel/${adminData.id}`)
-          .then((res) => {
-            Swal.fire(
-              "Deleted!",
-              "Your profile image has been deleted.",
-              "success"
-            );
+    
 
-            console.log("Image Removed: ", res.data);
-          })
-          .catch((err) => {
-            Swal.fire(
-              "Error!",
-              "There was an error deleting your profile image.",
-              "error"
-            );
-            console.log(err);
-          });
-      }
-    });
-  };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const formData = new FormData();
+  //   formData.append("id", adminData.id);
+  //   formData.append("username", username);
+  //   formData.append("email", email);
+  //   formData.append("description", description);
+  //   formData.append("pfpImage", pfpImage);
+
+  //   try {
+  //     const response = await axios.put(
+  //       "http://localhost:5000/admin/editProfile",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+  //     console.log("Edit-Profile: ", response.data);
+  //     navigate("/profile");
+  //   } catch (error) {
+  //     console.error("Failed to Edit-Profile: ", error);
+  //   }
+  // };
+    // const handleImageDelete = () => {
+    //   Swal.fire({
+    //     title: "Are you sure?",
+    //     text: "Do you really want to delete the profile image?",
+    //     icon: "warning",
+    //     showCancelButton: true,
+    //     confirmButtonColor: "#3085d6",
+    //     cancelButtonColor: "#d33",
+    //     confirmButtonText: "Yes, delete it!",
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       setImagePreviewUrl("../assets/img/no-dp.jpg");
+    //       axios
+    //         .put(`http://localhost:5000/admin/imageDel/${adminData.id}`)
+    //         .then((res) => {
+    //           Swal.fire(
+    //             "Deleted!",
+    //             "Your profile image has been deleted.",
+    //             "success"
+    //           );
+
+    //           console.log("Image Removed: ", res.data);
+    //         })
+    //         .catch((err) => {
+    //           Swal.fire(
+    //             "Error!",
+    //             "There was an error deleting your profile image.",
+    //             "error"
+    //           );
+    //           console.log(err);
+    //         });
+    //     }
+    //   });
+    // };
   return (
     <>
       <Sidebar />
@@ -159,7 +188,36 @@ const Editprofile = () => {
                         left: "92%",
                         transform: "translate(-50%, -50%)",
                       }}
-                      onClick={handleImageDelete}
+                      onClick={() => {
+                        if (adminData.pfpImage === null) {
+                          Swal.fire(
+                            "Error!",
+                            "Please upload a profile image.",
+                            "error"
+                          );
+                          return;
+                        }
+                        Swal.fire({
+                          title: "Are you sure?",
+                          text: "You are about to delete this item.",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Yes, delete it!",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            setPfpImage("null1");
+                            setImagePreviewUrl("../assets/img/no-dp.jpg");
+                            // Swal.fire(
+                            //   'Deleted!',
+                            //   'Your item has been deleted.',
+                            //   'success'
+                            // );
+                            // Additional logic after confirmation
+                          }
+                        });
+                      }}
                     />
                     <img
                       src={

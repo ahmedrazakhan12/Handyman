@@ -22,7 +22,6 @@ db.sequelize
     console.error("Unable to create tables:", err);
   });
 
-
   // Routes
 app.use("/admin", adminRoute);
 app.use("/user", userRoute);

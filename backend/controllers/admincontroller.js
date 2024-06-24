@@ -80,24 +80,41 @@ exports.adminData = async (req, res) => {
 
 // Controller function to handle edit profile
 
+// Controller function to handle edit profile picture
+// controllers/adminController.js
+// controllers/adminController.js
+const upload = require("../middlewares/Multer");
+const multer = require("multer");
+// controllers/adminController.js
+
+
 exports.editPfp = async (req, res) => {
   try {
-    const { id, username, email, description } = req.body;
+    const { id, username, email, description  } = req.body;
+    const imageIs = req.body.pfpImage;
     let imagePath = null;
 
     // Check if req.file exists (new profile picture uploaded)
     if (req.file) {
+      console.log("File received: ");
       const photoFileName = req.file.filename;
+      console.log("PhotoFileName: ", photoFileName);
       imagePath = `http://localhost:5000/public/uploads/pfp/${photoFileName}`;
     }
 
-    // Method to find adminModel by email
+  
+    // Method to update adminModel by id
     const editProfile = async (id, name, email, description, pfpImage) => {
       const updateFields = { name, email, description };
 
       // Only add pfpImage to updateFields if imagePath is not null
       if (pfpImage !== null) {
         updateFields.pfpImage = pfpImage;
+      }
+
+      // Handle special case where imageIs === "null1"
+      if (imageIs === "null1") {
+        updateFields.pfpImage = null;
       }
 
       return await adminModel.update(updateFields, { where: { id: id } });
@@ -300,8 +317,8 @@ exports.imageDel = async (req, res) => {
   try {
     const { id } = req.params;
     await adminModel.update({ pfpImage: null }, { where: { id: id } });
-    console.log("image deleted")
+    console.log("image deleted");
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 };

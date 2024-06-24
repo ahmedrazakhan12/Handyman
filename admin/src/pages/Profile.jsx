@@ -42,6 +42,19 @@ const Profile = () => {
       <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <Navbar />
         <div className="container-fluid">
+        <div className="card  card-body blur shadow-blur  p-1 overflow-hidden mb-2">
+            <nav
+              className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
+              id="navbarBlur"
+              navbar-scroll="true"
+            >
+              <div className="container-fluid p-2">
+                <nav aria-label="breadcrumb">
+                  <h6 className="font-weight-bolder mb-0 p-0 " style={{fontSize:'20px'}} >Profile</h6>
+                </nav>
+              </div>
+            </nav>
+          </div>
           <div
             className="page-header min-height-300 border-radius-xl mt-4"
             style={{

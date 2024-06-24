@@ -63,9 +63,52 @@ const AddMember = () => {
   return (
     <>
       <Sidebar />
-      <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg overflow-y-hidden">
+      <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         {/* <Navbar /> */}
         <div className="container-fluid  main-content position-relative ">
+        <div className="card  card-body blur shadow-blur  p-0 overflow-hidden mt-3">
+            <nav
+              className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
+              id="navbarBlur"
+              navbar-scroll="true"
+            >
+              <div className="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                  <h6 className="font-weight-bolder mb-0 ">
+                    Team Management | Add New Admin
+                  </h6>
+                </nav>
+                <div
+                  className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
+                  id="navbar"
+                >
+                  <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
+                  <ul className="navbar-nav  justify-content-end">
+                    <li className="nav-item d-flex align-items-center ">
+                      <button
+                        className="btn btn-primary m-0"
+                        onClick={() => navigate("/team-management")}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={18}
+                          height={18}
+                          style={{ marginRight: "4px", marginTop: "-5px" }}
+                          viewBox="0 0 512 512"
+                        >
+                          <path
+                            fill="white"
+                            d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"
+                          />
+                        </svg>{" "}
+                        <span className="">Back</span>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          </div>
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col">
               <div
@@ -92,7 +135,7 @@ const AddMember = () => {
                   </div>
                   <div className="col-xl-6">
                     <div className="card-body p-md-5 text-black">
-                      <h3 className="mb-5 text-uppercase">Add Members</h3>
+                      <h3 className="mb-5 text-uppercase">Add Admin</h3>
                       <form onSubmit={handleSubmit}>
                         <div className="row">
                           <div className="col-md-6 mb-4">
