@@ -10,22 +10,27 @@ import {
   CountryRegionData,
 } from "react-country-region-selector";
 import "../App.css";
+import { useGeolocated } from "react-geolocated";
 
 const AddProvider = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [pfpImage, setPfpImage] = useState(null); // Separate state for the file
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     contact: "",
-    address: "",
     password: "",
     confirmPassword: "",
     country: "", // Add country field to state
     region: "", // Add city field to state
+    city: "",
+    postalCode: "",
+    area: "",
+    address: "",
+    service: "",
   });
-  const [pfpImage, setPfpImage] = useState(null); // Separate state for the file
   const [imagePreviewUrl, setImagePreviewUrl] = useState(
     "../assets/img/no-dp.jpg"
   ); // State for image preview
@@ -33,6 +38,7 @@ const AddProvider = () => {
   const handleChange = (e) => {
     if (e.target.name === "pfpImage") {
       const file = e.target.files[0];
+      console.log("File: ", file);
       setPfpImage(file);
       setImagePreviewUrl(URL.createObjectURL(file)); // Create a URL for the selected file
     } else {
@@ -79,15 +85,19 @@ const AddProvider = () => {
     data.append("contact", formData.contact);
     data.append("address", formData.address);
     data.append("password", formData.password);
-    data.append("confirmPassword", formData.confirmPassword);
+    data.append("service", formData.service); // Add city to FormData
     data.append("country", formData.country); // Add country to FormData
     data.append("region", formData.region); // Add city to FormData
+    data.append("city", formData.city); // Add city to FormData
+    data.append("postalCode", formData.postalCode); // Add city to FormData
+    data.append("area", formData.area); // Add city to FormData
+    data.append("status", "provider");
     if (pfpImage) {
       data.append("pfpImage", pfpImage);
     }
 
     axios
-      .post("http://localhost:5000/user/register", data)
+      .post("http://localhost:5000/provider/register", data)
       .then((res) => {
         console.log(res.data);
         setErrorMessage(null);
@@ -123,6 +133,133 @@ const AddProvider = () => {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
+
+  // Fetching Location
+
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      userDecisionTimeout: 5000,
+    });
+
+  const [locationInfo, setLocationInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (coords) {
+        const { latitude, longitude } = coords;
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          console.log("Data: ", data);
+          setFormData({
+            ...formData,
+            country: data.address.country || "",
+            region: data.address.state || "",
+            city: data.address.city || "",
+            postalCode: data.address.postcode || "",
+            area: data.address.town || "",
+            address: data.display_name || "",
+          });
+
+          setLocationInfo(data);
+        } catch (error) {
+          console.error("Error fetching location data:", error);
+          setLocationInfo(null); // Reset locationInfo on error
+        }
+      }
+    };
+
+    fetchData();
+  }, [coords]);
+
+  if (!isGeolocationAvailable) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          fontFamily: '"Montserrat", "sans-serif"',
+          fontWeight: "bolder",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <h1>Location is unavailable.</h1>
+        <h1>
+          <span style={{ fontFamily: '"Arial"', fontSize: "24px" }}>
+            (╯°□°）╯︵ ┻━┻
+          </span>
+        </h1>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            navigate("/providerList");
+          }}
+        >
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
+  if (!isGeolocationEnabled) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          fontFamily: '"Montserrat", "sans-serif"',
+          fontWeight: "bolder",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <h1>The location is not enabled</h1>
+        <h1>
+          <span style={{ fontFamily: '"Arial"', fontSize: "24px" }}>
+            (╯°□°）╯︵ ┻━┻
+          </span>
+        </h1>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            navigate("/providerList");
+          }}
+        >
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
+  if (!coords) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          fontFamily: '"Montserrat", "sans-serif"',
+          fontWeight: "bolder",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <h1>Getting the location data.</h1>
+      </div>
+    );
+  }
+
   return (
     <>
       <Sidebar />
@@ -197,8 +334,7 @@ const AddProvider = () => {
                         width: "90%",
                         marginLeft: "5%",
                         height: "100%",
-                        backgroundColor: "black",
-                        opacity: isHovered ? 0.8 : 0, // Adjust opacity based on isHovered state
+                        opacity: isHovered ? 1.8 : 0, // Adjust opacity based on isHovered state
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
@@ -230,11 +366,11 @@ const AddProvider = () => {
                     </div>
                     <img
                       src={imagePreviewUrl}
-                      className="img-thumbnail"
+                      className="form img-thumbnail"
                       alt="Preview"
                       style={{
                         width: "100%",
-                        height: "100%",
+                        height: "300px",
                         objectFit: "cover",
                       }}
                     />
@@ -264,6 +400,7 @@ const AddProvider = () => {
                       {/* <div className="col-lg-12">
                         <label htmlFor="">Image</label>
                         <input
+                          readOnly
                           className="form-control"
                           accept="image/png, image/jpeg"
                           type="file"
@@ -274,6 +411,7 @@ const AddProvider = () => {
                       <div className="col-lg-6">
                         <label htmlFor="">Select Provider Type: </label>
                         <select
+                          required
                           className="form-select w-150"
                           aria-label="Select Service Provider Type"
                           name="service"
@@ -311,38 +449,71 @@ const AddProvider = () => {
                       </div>
                       <div className="col-lg-6 text-dark">
                         <label htmlFor="">Select Country</label>
-                        <CountryDropdown
+                        <input
+                          readOnly
                           className="form-control"
+                          type="text"
+                          name="country"
                           value={formData.country}
-                          onChange={(val) => selectCountry(val)}
-                          required
                         />
                       </div>
                       <div className="col-lg-6 text-primary">
                         <label htmlFor="">Select Region</label>
-                        <RegionDropdown
+                        <input
+                          readOnly
                           className="form-control"
-                          country={formData.country}
+                          type="text"
+                          name="region"
                           value={formData.region}
-                          onChange={(val) => selectRegion(val)}
-                          required
                         />
                       </div>
-                    </div>
-                    <div className="col-lg-12 text-warning">
-                      <label htmlFor="">Address</label>
-                      <textarea
-                        style={{ maxHeight: "110px", minHeight: "110px" }}
-                        className="form-control resizable-none"
-                        id=""
-                        name="address"
-                        required
-                        onChange={handleChange}
-                      ></textarea>
+
+                      <div className="col-lg-4 text-dark">
+                        <label htmlFor="">Select City</label>
+                        <input
+                          readOnly
+                          className="form-control"
+                          type="text"
+                          name="city"
+                          value={formData.city}
+                        />
+                      </div>
+                      <div className="col-lg-4 text-primary">
+                        <label htmlFor="">Select Postal Code</label>
+                        <input
+                          readOnly
+                          className="form-control"
+                          type="text"
+                          name="postalCode"
+                          value={formData.postalCode}
+                        />
+                      </div>
+                      <div className="col-lg-4 text-primary">
+                        <label htmlFor="">Select Area</label>
+                        <input
+                          readOnly
+                          className="form-control"
+                          type="text"
+                          name="area"
+                          value={formData.area}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="row">
+                  <div className="col-lg-12 text-warning">
+                    <label htmlFor="">Address</label>
+                    <textarea
+                      style={{ maxHeight: "110px", minHeight: "110px" }}
+                      className="form-control resizable-none"
+                      id=""
+                      name="address"
+                      required
+                      value={formData.address}
+                      readOnly
+                    ></textarea>
+                  </div>
                   <div className="col-lg-6 text-dark">
                     <label htmlFor="">Password</label>
                     <input
@@ -389,3 +560,92 @@ const AddProvider = () => {
 };
 
 export default AddProvider;
+// import React, { useState, useEffect } from "react";
+// import { useGeolocated } from "react-geolocated";
+
+// const Demo = () => {
+// const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+//     positionOptions: {
+//         enableHighAccuracy: true,
+//     },
+//     userDecisionTimeout: 5000,
+// });
+
+// const [locationInfo, setLocationInfo] = useState(null);
+
+// useEffect(() => {
+//     const fetchData = async () => {
+//         if (coords) {
+//             const { latitude, longitude } = coords;
+//             try {
+//                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`);
+//                 if (!response.ok) {
+//                     throw new Error('Network response was not ok');
+//                 }
+//                 const data = await response.json();
+//                 setLocationInfo(data);
+//             } catch (error) {
+//                 console.error('Error fetching location data:', error);
+//                 setLocationInfo(null); // Reset locationInfo on error
+//             }
+//         }
+//     };
+
+//     fetchData();
+// }, [coords]);
+
+// if (!isGeolocationAvailable) {
+//     return <div>Your browser does not support Geolocation</div>;
+// }
+
+// if (!isGeolocationEnabled) {
+//     return <div>Geolocation is not enabled</div>;
+// }
+
+// if (!coords) {
+//     return <div>Getting the location data&hellip;</div>;
+// }
+
+//     return (
+//         <div>
+//             <table>
+//                 <tbody>
+//                     <tr>
+//                         <td>Latitude</td>
+//                         <td>{coords.latitude}</td>
+//                     </tr>
+//                     <tr>
+//                         <td>Longitude</td>
+//                         <td>{coords.longitude}</td>
+//                     </tr>
+//                     {locationInfo && locationInfo.address && (
+//                         <>
+//                             <tr>
+//                                 <td>Country</td>
+//                                 <td>{locationInfo.address.country}</td>
+//                             </tr>
+//                             <tr>
+//                                 <td>State</td>
+//                                 <td>{locationInfo.address.state}</td>
+//                             </tr>
+//                             <tr>
+//                                 <td>City</td>
+//                                 <td>{locationInfo.address.city}</td>
+//                             </tr>
+//                             <tr>
+//                                 <td>Postal Code</td>
+//                                 <td>{locationInfo.address.postcode}</td>
+//                             </tr>
+//                             <tr>
+//                                 <td>Address 1: </td>
+//                                 <td>{locationInfo.address.house_number} {locationInfo.address.road}</td>
+//                             </tr>
+//                         </>
+//                     )}
+//                 </tbody>
+//             </table>
+//         </div>
+//     );
+// };
+
+// export default Demo;

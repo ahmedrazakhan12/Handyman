@@ -16,13 +16,12 @@ const userModel = sequelize.define(
     },
     email: {
       type: DataTypes.STRING,
-      unique: true, // Ensure emails are unique
+      unique: true,
       allowNull: false,
     },
     contact: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING, // Define contact as STRING to store phone numbers
       allowNull: true,
-      // Add length constraint if necessary
     },
     pfpImage: {
       type: DataTypes.STRING,
@@ -32,11 +31,48 @@ const userModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    service: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    region: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    postalCode: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    area: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // Add other attributes as needed
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     // Additional model options can be defined here

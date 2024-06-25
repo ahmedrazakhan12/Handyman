@@ -21,6 +21,7 @@ import UserData from "./pages/UserData";
 import EditCustomer from "./edit/EditCustomer";
 import ProviderList from "./pages/ProviderList";
 import AddProvider from "./pages/AddProvider";
+import ProviderView from "./pages/ProviderView";
 function App() {
   const [adminData, setAdminData] = useState({});
   const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
@@ -78,6 +79,7 @@ function App() {
             <Route path="/edit-customer/:id" element={<EditCustomer />} />
             <Route path="/providerList" element={<ProviderList />} />
             <Route path="/add-provider" element={<AddProvider />} />
+            <Route path="/provider/:id" element={<ProviderView />} />
           </Routes>
       
     </div>

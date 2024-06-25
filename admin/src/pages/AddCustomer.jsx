@@ -57,6 +57,7 @@ const AddCustomer = () => {
     data.append("address", formData.address);
     data.append("password", formData.password);
     data.append("confirmPassword", formData.confirmPassword);
+    data.append("status", "user");
     if (pfpImage) {
       data.append("pfpImage", pfpImage);
     }

@@ -6,8 +6,8 @@ const { Sequelize } = require("sequelize"); // Import Sequelize
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, contact, address } = req.body;
-    console.log("Formdata:", name, email, password, contact, address);
+    const { name, email, password, contact, address, status } = req.body;
+    console.log("Formdata:", name, email, password, contact, address, status);
 
     let imagePath = null; // Changed from const to let
     // Check if req.file exists (new profile picture uploaded)
@@ -26,6 +26,7 @@ exports.register = async (req, res) => {
       contact: contact,
       address: address,
       pfpImage: imagePath,
+      status: status,
     });
 
     res.status(200).json({
@@ -53,6 +54,9 @@ exports.users = async (req, res) => {
   try {
     const users = await userModel.findAll({
       order: [["id", "ASC"]],
+      where: {
+        status: "user",
+      },
     });
     res.send(users);
   } catch (error) {
@@ -69,6 +73,7 @@ exports.search = async (req, res) => {
     const { key } = req.params;
     const users = await userModel.findAll({
       where: {
+        status: "user",
         [Sequelize.Op.or]: [
           { name: { [Sequelize.Op.iLike]: `%${key}%` } },
           { email: { [Sequelize.Op.iLike]: `%${key}%` } },
