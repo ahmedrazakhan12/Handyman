@@ -512,7 +512,7 @@ const AddProvider = () => {
                     ></textarea>
                   </div>
                   <div className="col-lg-6 text-dark">
-                    <label htmlFor="">Password</label>
+                    <label htmlFor="">Create Password</label>
                     <input
                       className="form-control"
                       type="password"
@@ -522,7 +522,7 @@ const AddProvider = () => {
                     />
                   </div>
                   <div className="col-lg-6 text-primary">
-                    <label htmlFor="">Confirm Password</label>
+                    <label htmlFor="">Re-type Password</label>
                     <input
                       className="form-control"
                       type="password"

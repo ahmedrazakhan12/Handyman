@@ -108,10 +108,10 @@ exports.usersById = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const { id, username, email, contact, address, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
     let imagePath = null; // Changed from const to let
     const imageIs = req.body.pfpImage;
     console.log("Image Is:", imageIs);
-    const hashedPassword = await bcrypt.hash(password, 10);
     // Check if req.file exists (new profile picture uploaded)
     if (req.file) {
       const photoFileName = req.file.filename;

@@ -480,7 +480,7 @@ const Sidebar = () => {
               to={"/customers"}
               className={
                 location.pathname === "/customers"
-                  ? "nav-link active"
+                  ? "nav-link active mt-3"
                   : "nav-link"
               }
             >

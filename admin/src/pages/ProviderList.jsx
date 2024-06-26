@@ -93,7 +93,8 @@ const ProviderList = () => {
             style={{ maxHeight: "90vh" }}
           >
             <div className="table-responsive p-2    ">
-              <div
+              
+            <div
                 style={{
                   float: "right",
                   position: "absolute",
@@ -101,6 +102,7 @@ const ProviderList = () => {
                   right: "10px",
                 }}
               >
+
                 <div className="input-group   p-1">
                   <span className="input-group-text text-body">
                     <i className="fas fa-search" aria-hidden="true" />
@@ -112,6 +114,10 @@ const ProviderList = () => {
                     onChange={handleSearchChange}
                   />
                 </div>
+              </div>
+
+              <div>
+                <h5 className="text-capitalize text-secondary  font-weight-bolder opacity-8" style={{marginLeft: "2%" , fontSize:'15px'}}>Service Providers</h5>
               </div>
               <table
                 className="table align-items-center"

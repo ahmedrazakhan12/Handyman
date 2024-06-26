@@ -10,7 +10,6 @@ const EditProvider = () => {
   const [data, setData] = useState({});
   const [isHovered, setIsHovered] = useState(false);
   const [pfpImage, setPfpImage] = useState(null); // Separate state for the file
-  console.log("PFP Image: ", pfpImage);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -38,14 +37,6 @@ const EditProvider = () => {
         const imageUrl = URL.createObjectURL(file);
         setImagePreviewUrl(imageUrl);
         // Use 'imageUrl' as needed, e.g., setting state for previewing images
-      } else if (e.target.name === "createdAt") {
-        const date = e.target.value;
-        const inputDate = new Date(date);
-        const formattedDate = inputDate.toISOString();
-        setData((prevData) => ({
-          ...prevData,
-          [e.target.name]: formattedDate,
-        }));
       } else {
         setImagePreviewUrl("../assets/img/no-dp.jpg");
       }
@@ -70,12 +61,14 @@ const EditProvider = () => {
     formData.append("country", data.country);
     formData.append("region", data.region);
     formData.append("city", data.city);
-    formData.append("createdAt", data.createdAt);
     formData.append("postalCode", data.postalCode);
     formData.append("area", data.area);
     formData.append("address", data.address);
     formData.append("service", data.service);
-    formData.append("pfpImage", pfpImage);
+    if (pfpImage) {
+      formData.append("pfpImage", pfpImage);
+    }
+
     axios
       .put(`http://localhost:5000/provider/providers/${id}`, formData)
       .then((res) => {
@@ -93,6 +86,35 @@ const EditProvider = () => {
       });
   };
 
+  const handleDeleteProvider = () => {
+   Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:5000/provider/providers/${id}`)
+          .then((res) => {
+            console.log(res.data);
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Provider Deleted Successfully",
+              timer: 1000,
+            });
+            navigate("/providerList");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
+  };
   return (
     <>
       <Sidebar />
@@ -146,7 +168,10 @@ const EditProvider = () => {
           {/* form */}
           <div className="card team-details mt-3">
             <div className="card-body">
-              <ul className="nav nav-tabs">
+              <ul
+                className="nav nav-tabs"
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <li className="nav-item">
                   <a
                     className="nav-link active"
@@ -160,6 +185,25 @@ const EditProvider = () => {
                   <a className="nav-link" data-toggle="tab" href="#booking">
                     Booking
                   </a>
+                </li>
+                <li className="nav-item" style={{ marginLeft: "auto" }}>
+                  <button className="btn btn-primary" onClick={handleDeleteProvider}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                    style={{
+                      fill: "white",
+                      height: "15px",
+                      width: "17px",
+                      marginBottom: "4px",
+                      cursor: "pointer",
+                    }}
+                  
+                      
+                  >
+                    <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z" />
+                  </svg> Delete User
+                  </button>
                 </li>
               </ul>
 
@@ -231,7 +275,7 @@ const EditProvider = () => {
                                 }).then((result) => {
                                   if (result.isConfirmed) {
                                     // User confirmed, proceed with action
-                                    setPfpImage(null);
+                                    setPfpImage("null1");
                                     setImagePreviewUrl(
                                       "../assets/img/no-dp.jpg"
                                     );
@@ -328,16 +372,15 @@ const EditProvider = () => {
                                     onChange={handleChange}
                                   />
                                 </li>
-
                                 <li className="list-group-item border-0 text-capitalize">
                                   <strong className="text-dark text-sm">
-                                    Joining date:
+                                    Postal Code:
                                   </strong>{" "}
                                   <input
-                                    type="date"
+                                    type="text"
                                     className="form-control"
-                                    name="createdAt"
-                                    value={data.createdAt || ""}
+                                    name="postalCode"
+                                    value={data.postalCode || ""}
                                     onChange={handleChange}
                                   />
                                 </li>
@@ -356,15 +399,39 @@ const EditProvider = () => {
 
                                 <li className="list-group-item border-0 text-capitalize">
                                   <strong className="text-dark text-sm">
-                                    Service:
+                                    Select Provider Type:
                                   </strong>{" "}
-                                  <input
-                                    type="text"
-                                    className="form-control m-0"
+                                  <select
+                                    required
+                                    className="form-select w-150"
+                                    aria-label="Select Service Provider Type"
                                     name="service"
-                                    value={data.service || ""}
-                                    onChange={handleChange}
-                                  />
+                                    onChange={handleChange} // Replace handleChange with your actual handler function
+                                  >
+                                    <option value="">
+                                      Select Service Provider Type
+                                    </option>
+                                    <option value="electrician">
+                                      Electrician
+                                    </option>
+                                    <option value="plumber">Plumber</option>
+                                    <option value="carpenter">Carpenter</option>
+                                    <option value="painter">Painter</option>
+                                    <option value="hvac-technician">
+                                      HVAC Technician
+                                    </option>
+                                    <option value="landscaper">
+                                      Landscaper/Gardener
+                                    </option>
+                                    <option value="handyman">
+                                      General Handyman
+                                    </option>
+                                    <option value="cleaner">Cleaner</option>
+                                    <option value="pest-control">
+                                      Pest Control Specialist
+                                    </option>
+                                    <option value="locksmith">Locksmith</option>
+                                  </select>
                                 </li>
 
                                 <li className="list-group-item border-0 text-sm">
@@ -376,18 +443,6 @@ const EditProvider = () => {
                                     className="form-control m-0"
                                     name="contact"
                                     value={data.contact || ""}
-                                    onChange={handleChange}
-                                  />
-                                </li>
-                                <li className="list-group-item border-0 text-capitalize">
-                                  <strong className="text-dark text-sm">
-                                    Postal Code:
-                                  </strong>{" "}
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    name="postalCode"
-                                    value={data.postalCode || ""}
                                     onChange={handleChange}
                                   />
                                 </li>
@@ -422,13 +477,35 @@ const EditProvider = () => {
                   >
                     Save
                   </button>
-                  {/* <button
+                  <button
                     type="button"
-                    className="btn btn-secondary me-3"
+                    onClick={() => {
+                      Swal.fire({
+                        title: "Unsaved Changes",
+                        text: "Are you sure want to discard your changes?.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, Unsaved it!",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          navigate("/providerList");
+                        }
+                      });
+                    }}
+                    className="btn btn-secondary me-2"
                     style={{ float: "right" }}
                   >
                     Cancel
-                  </button> */}
+                  </button>
+                  {/* <button
+                      type="button"
+                      className="btn btn-secondary me-3"
+                      style={{ float: "right" }}
+                    >
+                      Cancel
+                    </button> */}
                 </form>
               </div>
             </div>

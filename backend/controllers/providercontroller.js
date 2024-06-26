@@ -144,48 +144,61 @@ exports.updateProvider = async (req, res) => {
       pfpImage,
       createdAt,
     } = req.body;
-   
-    console.log(
-      "name: ",
+
+    // console.log(
+    //   "name: ",
+    //   name,
+    //   "email: ",
+    //   email,
+    //   "contact: ",
+    //   contact,
+    //   "address: ",
+    //   address,
+    //   "status: ",
+    //   "provider",
+    //   "service: ",
+    //   service,
+    //   "country: ",
+    //   country,
+    //   "city: ",
+    //   city,
+    //   "postalCode: ",
+    //   postalCode,
+    //   "image: ",
+    //   pfpImage,
+    //   "createdAt: ",
+    //   createdAt
+    // );
+
+    let imagePath = null; // Changed from const to let
+    const imageIs = req.body.pfpImage;
+    console.log("Image Is:", imageIs);
+    // Check if req.file exists (new profile picture uploaded)
+    if (req.file) {
+      const photoFileName = req.file.filename;
+      imagePath = `http://localhost:5000/public/uploads/pfp/${photoFileName}`;
+    }
+
+    const updateFields = {
       name,
-      "email: ",
       email,
-      "contact: ",
       contact,
-      "address: ",
       address,
-      "status: ",
-      "provider",
-      "service: ",
       service,
-      "country: ",
       country,
-      "city: ",
       city,
-      "postalCode: ",
       postalCode,
-      "image: ",
-      pfpImage,
-      "createdAt: ",
-      createdAt
-    );
+    };
 
-
-
-    const user = await userModel.update(
-      {
-        name: name,
-        email: email,
-        contact: contact,
-        address: address,
-        status: "provider",
-        service: service,
-        country: country,
-        city: city,
-        postalCode: postalCode,
-      },
-      { where: { id: id } }
-    );
+    // Only add pfpImage to updateFields if imagePath is not null
+    if (imagePath !== null) {
+      updateFields.pfpImage = imagePath;
+    }
+    if (imageIs === "null1") {
+      updateFields.pfpImage = null;
+    }
+    const updateProfile = await userModel.update(updateFields, { where: { id: id } });
+    res.send(updateProfile);
   } catch (error) {
     res.status(500).json({
       status: 500,
@@ -194,3 +207,19 @@ exports.updateProvider = async (req, res) => {
     });
   }
 };
+
+
+exports.deleteProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteProfile = await userModel.destroy({ where: { id: id } });
+    res.sendStatus(200).send(deleteProfile);
+    console.log("Profile deleted successfully:", deleteProfile);
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: null,
+      message: "Internal server error.",
+    });
+  }
+}
