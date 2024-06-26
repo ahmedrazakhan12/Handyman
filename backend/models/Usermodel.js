@@ -55,10 +55,10 @@ const userModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    area: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    // area: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
     password: {
       type: DataTypes.STRING,
       allowNull: false,

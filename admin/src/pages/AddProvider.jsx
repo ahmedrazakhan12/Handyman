@@ -27,7 +27,6 @@ const AddProvider = () => {
     region: "", // Add city field to state
     city: "",
     postalCode: "",
-    area: "",
     address: "",
     service: "",
   });
@@ -90,7 +89,6 @@ const AddProvider = () => {
     data.append("region", formData.region); // Add city to FormData
     data.append("city", formData.city); // Add city to FormData
     data.append("postalCode", formData.postalCode); // Add city to FormData
-    data.append("area", formData.area); // Add city to FormData
     data.append("status", "provider");
     if (pfpImage) {
       data.append("pfpImage", pfpImage);
@@ -165,7 +163,6 @@ const AddProvider = () => {
             region: data.address.state || "",
             city: data.address.city || "",
             postalCode: data.address.postcode || "",
-            area: data.address.town || "",
             address: data.display_name || "",
           });
 
@@ -468,7 +465,7 @@ const AddProvider = () => {
                         />
                       </div>
 
-                      <div className="col-lg-4 text-dark">
+                      <div className="col-lg-6 text-dark">
                         <label htmlFor="">Select City</label>
                         <input
                           readOnly
@@ -478,7 +475,7 @@ const AddProvider = () => {
                           value={formData.city}
                         />
                       </div>
-                      <div className="col-lg-4 text-primary">
+                      <div className="col-lg-6 text-primary">
                         <label htmlFor="">Select Postal Code</label>
                         <input
                           readOnly
@@ -488,7 +485,7 @@ const AddProvider = () => {
                           value={formData.postalCode}
                         />
                       </div>
-                      <div className="col-lg-4 text-primary">
+                      {/* <div className="col-lg-4 text-primary">
                         <label htmlFor="">Select Area</label>
                         <input
                           readOnly
@@ -497,7 +494,7 @@ const AddProvider = () => {
                           name="area"
                           value={formData.area}
                         />
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

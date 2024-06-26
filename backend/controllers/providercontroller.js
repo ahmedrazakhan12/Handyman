@@ -15,10 +15,8 @@ exports.register = async (req, res) => {
       status,
       service,
       country,
-      region,
       city,
       postalCode,
-      area,
     } = req.body;
     console.log(
       "Formdata:",
@@ -30,10 +28,8 @@ exports.register = async (req, res) => {
       status,
       service,
       country,
-      region,
       city,
-      postalCode,
-      area
+      postalCode
     );
 
     let imagePath = null; // Changed from const to let
@@ -56,10 +52,8 @@ exports.register = async (req, res) => {
       status: status,
       service: service,
       country: country,
-      region: region,
       city: city,
       postalCode: postalCode,
-      area: area,
     });
 
     res.status(200).json({
@@ -99,11 +93,10 @@ exports.getProviders = async (req, res) => {
   }
 };
 
-
 exports.getProvidersById = async (req, res) => {
   try {
     const provider = await userModel.findOne({
-      where: { status: "provider"  , id: req.params.id },
+      where: { status: "provider", id: req.params.id },
     });
     res.send(provider);
   } catch (error) {
@@ -113,7 +106,7 @@ exports.getProvidersById = async (req, res) => {
       message: "Internal server error.",
     });
   }
-}
+};
 exports.search = async (req, res) => {
   try {
     const { key } = req.params;
@@ -127,6 +120,72 @@ exports.search = async (req, res) => {
       },
     });
     res.send(users);
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: null,
+      message: "Internal server error.",
+    });
+  }
+};
+
+exports.updateProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      email,
+      contact,
+      address,
+      service,
+      country,
+      city,
+      postalCode,
+      pfpImage,
+      createdAt,
+    } = req.body;
+   
+    console.log(
+      "name: ",
+      name,
+      "email: ",
+      email,
+      "contact: ",
+      contact,
+      "address: ",
+      address,
+      "status: ",
+      "provider",
+      "service: ",
+      service,
+      "country: ",
+      country,
+      "city: ",
+      city,
+      "postalCode: ",
+      postalCode,
+      "image: ",
+      pfpImage,
+      "createdAt: ",
+      createdAt
+    );
+
+
+
+    const user = await userModel.update(
+      {
+        name: name,
+        email: email,
+        contact: contact,
+        address: address,
+        status: "provider",
+        service: service,
+        country: country,
+        city: city,
+        postalCode: postalCode,
+      },
+      { where: { id: id } }
+    );
   } catch (error) {
     res.status(500).json({
       status: 500,

@@ -22,6 +22,7 @@ import EditCustomer from "./edit/EditCustomer";
 import ProviderList from "./pages/ProviderList";
 import AddProvider from "./pages/AddProvider";
 import ProviderView from "./pages/ProviderView";
+import EditProvider from "./edit/EditProvider";
 function App() {
   const [adminData, setAdminData] = useState({});
   const [loginId, setLoginId] = useState(''); // Initialize with null or an appropriate initial value
@@ -80,6 +81,7 @@ function App() {
             <Route path="/providerList" element={<ProviderList />} />
             <Route path="/add-provider" element={<AddProvider />} />
             <Route path="/provider/:id" element={<ProviderView />} />
+            <Route path="/edit-provider/:id" element={<EditProvider/>} />
           </Routes>
       
     </div>

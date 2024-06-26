@@ -117,31 +117,29 @@ const ProviderView = () => {
                         <ul className="list-group ">
                           <div className="row ">
                             <div className="col-lg-6">
-                              <li className="list-group-item border-0 ps-0  pt-0 text-sm text-capitalize">
+                              <li className="list-group-item border-0 ps-0  text-sm text-capitalize">
                                 <strong className="text-dark">
                                   Full Name:
                                 </strong>{" "}
                                 {data.name}
                                 &nbsp;
                               </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 text-sm">
-                                <strong className="text-dark">Email:</strong>{" "}
-                                &nbsp;
-                                {data.email}
-                              </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 text-sm">
-                                <strong className="text-dark">Contact:</strong>{" "}
-                                {data.contact}
-                                &nbsp;
-                              </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 pb-0 text-capitalize">
+                              <li className="list-group-item border-0 ps-0 text-capitalize">
                                 <strong className="text-dark text-sm">
-                                  Service:
+                                  Country:
                                 </strong>{" "}
-                                {data.service}
+                                {data.country}
                                 &nbsp;
                               </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 pb-0 text-capitalize">
+                              <li className="list-group-item border-0 ps-0  text-capitalize">
+                                <strong className="text-dark text-sm">
+                                  City:
+                                </strong>{" "}
+                                {data.city}
+                                &nbsp;
+                              </li>
+
+                              <li className="list-group-item border-0 ps-0  text-capitalize">
                                 <strong className="text-dark text-sm">
                                   Joining date:
                                 </strong>{" "}
@@ -150,46 +148,44 @@ const ProviderView = () => {
                               </li>
                             </div>
                             <div className="col-lg-6">
-                              <li className="list-group-item border-0 ps-0 pb-0 pt-0 text-capitalize">
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">Email:</strong>{" "}
+                                &nbsp;
+                                {data.email}
+                              </li>
+                              
+                              <li className="list-group-item border-0 ps-0  text-capitalize">
                                 <strong className="text-dark text-sm">
-                                  Country:
+                                  Service:
                                 </strong>{" "}
-                                {data.country}
+                                {data.service}
                                 &nbsp;
                               </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 pb-0 text-capitalize">
-                                <strong className="text-dark text-sm">
-                                  City:
-                                </strong>{" "}
-                                {data.city}
+
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">Contact:</strong>{" "}
+                                {data.contact}
                                 &nbsp;
                               </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 pb-0 text-capitalize">
-                                <strong className="text-dark text-sm">
-                                  Region:
-                                </strong>{" "}
-                                {data.region}
-                                &nbsp;
-                              </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 pb-0 text-capitalize">
+                              {/* <li className="list-group-item mt-2 border-0 ps-0  text-capitalize">
                                 <strong className="text-dark text-sm">
                                   Area:
                                 </strong>{" "}
                                 {data.area}
                                 &nbsp;
-                              </li>
-                              <li className="list-group-item mt-2 border-0 ps-0 pb-0 text-capitalize">
-                                <strong className="text-dark text-sm">
-                                  Postal Code:
-                                </strong>{" "}
-                                {data.postalCode}
-                                &nbsp;
-                              </li>
+                              </li> */}
                             </div>
                           </div>
-                          <li className="list-group-item mt-2 border-0 ps-0 text-sm">
-                            <strong className="text-dark">Address:</strong>{" "}
-                            {data.address}
+                          <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Address:</strong>{" "}
+                              {data.address}
+                            &nbsp;
+                          </li>
+                          <li className="list-group-item border-0 ps-0  text-capitalize">
+                            <strong className="text-dark text-sm">
+                              Postal Code:
+                            </strong>{" "}
+                            {data.postalCode}
                             &nbsp;
                           </li>
                         </ul>

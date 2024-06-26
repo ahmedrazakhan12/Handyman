@@ -22,6 +22,7 @@ const Dashboard = () => {
 
 
   const [data, setData] = useState([]);
+  const [providers , setProviders] = useState([]);
 
   useEffect(() => {
     axios
@@ -29,6 +30,18 @@ const Dashboard = () => {
       .then((res) => {
         console.log(res.data);
         setData(res.data);
+      })
+      .catch((err) => {
+        console.log("ahmed", err);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/provider/providers")
+      .then((res) => {
+        console.log(res.data);
+        setProviders(res.data);
       })
       .catch((err) => {
         console.log("ahmed", err);
@@ -90,18 +103,17 @@ const Dashboard = () => {
                 <div className="card-body p-3">
                   <div className="row">
                     <div className="col-8">
+                      <Link to="/providerList">
                       <div className="numbers">
                         <p className="text-sm mb-0 text-capitalize font-weight-bold">
                         Service Providers
 
                         </p>
                         <h5 className="font-weight-bolder mb-0">
-                          2,300
-                          <span className="text-success text-sm font-weight-bolder">
-                            +3%
-                          </span>
+                          {providers.length}
                         </h5>
                       </div>
+                      </Link>
                     </div>
                     <div className="col-4 text-end">
                       <div className="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">

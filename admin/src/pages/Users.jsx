@@ -76,23 +76,25 @@ const Users = () => {
 
           {/* table */}
 
-          <div className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg"  style={{maxHeight:'90vh' , overflow:'scroll'}}>
+          <div
+            className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg"
+            style={{ maxHeight: "90vh", overflow: "scroll" }}
+          >
             <div className="table-responsive p-2   ">
-            
-                <div style={{float:'right'}}>
-                  <div className="input-group   p-1">
-                    <span className="input-group-text text-body">
-                      <i className="fas fa-search" aria-hidden="true" />
-                    </span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Type here..."
-                      onChange={handleSearchChange}
-                    />
-                  </div>
+              <div style={{ float: "right" }}>
+                <div className="input-group   p-1">
+                  <span className="input-group-text text-body">
+                    <i className="fas fa-search" aria-hidden="true" />
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Type here..."
+                    onChange={handleSearchChange}
+                  />
                 </div>
-                <table className="table align-items-center  ">
+              </div>
+              <table className="table align-items-center  ">
                 <thead>
                   <tr>
                     <th style={{ width: "5px" }}></th>
@@ -172,15 +174,24 @@ const Users = () => {
                           </td>
                           <td className="align-middle text-center">
                             <span className="text-secondary text-xs font-weight-bold">
-                              <button
+                              <Link
+                                to={`/edit-customer/${item.id}`}
+                                className="text-secondary font-weight-bold text-xs"
+                              >
+                                Edit
+                              </Link>
+                              {/* <button
                                 className="btn btn-primary"
-                                style={{paddingLeft:'25px' , paddingRight:'25px'}}   
+                                style={{
+                                  paddingLeft: "25px",
+                                  paddingRight: "25px",
+                                }}
                                 onClick={() =>
                                   navigate(`/edit-customer/${item.id}`)
                                 }
                               >
                                 Edit
-                              </button>
+                              </button> */}
                             </span>
                           </td>
                         </tr>

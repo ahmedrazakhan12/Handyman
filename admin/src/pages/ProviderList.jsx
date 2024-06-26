@@ -132,7 +132,7 @@ const ProviderList = () => {
                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                       service
                     </th>
-                    
+
                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                       action
                     </th>
@@ -195,11 +195,16 @@ const ProviderList = () => {
                               {item.service}
                             </p>
                           </td>
-                          
 
                           <td className="align-middle text-center">
                             <span className="text-secondary text-xs font-weight-bold">
-                              <button
+                              <Link
+                                to={`/edit-provider/${item.id}`}
+                                className="text-secondary font-weight-bold text-xs"
+                              >
+                                Edit
+                              </Link>
+                              {/* <button
                                 className="btn btn-primary"
                                 style={{
                                   paddingLeft: "25px",
@@ -210,7 +215,7 @@ const ProviderList = () => {
                                 }
                               >
                                 Edit
-                              </button>
+                              </button> */}
                             </span>
                           </td>
                         </tr>
@@ -258,7 +263,8 @@ export default ProviderList;
                               )}
                             </span> */
 }
-{/* <td className="align-middle text-center text-sm">
+{
+  /* <td className="align-middle text-center text-sm">
                             <p className="text-xs font-weight-bold mb-0">
                               {item.country}
                             </p>
@@ -307,4 +313,5 @@ export default ProviderList;
                                 </button>
                               )}
                             </span>
-                          </div> */}
+                          </div> */
+}

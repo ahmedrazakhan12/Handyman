@@ -358,7 +358,7 @@ const Sidebar = () => {
                     background: "transparent",
                     border: "none",
                     marginLeft: "0",
-                    marginBottom: "-12px",
+                    marginBottom: "-22px",
                   }}
                   className="nav-link"
                   type="button"
@@ -393,8 +393,8 @@ const Sidebar = () => {
                 >
                   <ul style={{ listStyle: "none" }}>
                     <Link to="/providerList">
-                      <li className="mb-3 mt-3 d-flex cursor-pointer">
-                        <div
+                      <li className=" d-flex cursor-pointer">
+                        {/* <div
                           className={
                             location.pathname === "/providerList"
                               ? "icon icon-shape icon-sm shadow border-radius-md bg-primary cursor-pointer text-center me-2 d-flex align-items-center justify-content-center p-0"
@@ -419,13 +419,24 @@ const Sidebar = () => {
                               d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
                             />
                           </svg>
+                        </div> */}
+                        <div
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            marginLeft: "0",
+                            marginBottom: "-12px",
+                          }}
+                          className="nav-link"
+                        >
+                          <span className="me-2">•</span>
+                          Provider List
                         </div>
-                        Provider List
                       </li>
                     </Link>
 
-                    <li className="mb-3 mt-3 d-flex cursor-pointer">
-                      <div className="icon icon-shape icon-sm shadow border-radius-md bg-white  text-center me-2 d-flex align-items-center justify-content-center p-0">
+                    <li className="mb-3 mt-1 d-flex cursor-pointer">
+                      {/* <div className="icon icon-shape icon-sm shadow border-radius-md bg-white  text-center me-2 d-flex align-items-center justify-content-center p-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 640 512"
@@ -440,8 +451,21 @@ const Sidebar = () => {
                             d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"
                           />
                         </svg>
-                      </div>
-                      Provider Request List
+                      </div> */}
+                      <Link to={"/add-provider"}>
+                        <div
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            marginLeft: "0",
+                            marginBottom: "-12px",
+                          }}
+                          className="nav-link"
+                        >
+                          <span className="me-2 ">•</span>
+                          <span>Add Provider</span>
+                        </div>
+                      </Link>
                     </li>
                   </ul>
                 </div>
