@@ -7,6 +7,7 @@ const { userModel } = require("./Usermodel");
 const {Servicebooking} = require('./Servicebooking')
 // Sync the model with the database, creating the table if it doesn't exist
 
+Servicebooking.belongsTo(userModel, { foreignKey: 'user_id' });
 const db = {};
 
 // Initialize models

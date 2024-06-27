@@ -6,19 +6,61 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const ProviderView = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const { id } = useParams();
+
   useEffect(() => {
     axios
       .get(`http://localhost:5000/provider/providers/${id}`)
       .then((res) => {
         setData(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, [id]);
+
+  const [serviceData, setServiceData] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/booking/getServicebooking/${id}`)
+      .then((res) => {
+        setServiceData(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(10); // Number of cards per page
+
+  // Search
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Status filter
+  const [statusFilter, setStatusFilter] = useState("all"); // "all", "completed", "pending", "cancel"
+
+  // Get current posts after filtering with search term and status
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+
+  let filteredPosts = serviceData.filter((item) =>
+    item.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (statusFilter !== "all") {
+    filteredPosts = filteredPosts.filter(
+      (item) => item.status.toLowerCase() === statusFilter
+    );
+  }
+
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <>
       <Sidebar />
@@ -69,7 +111,6 @@ const ProviderView = () => {
             </nav>
           </div>
 
-          {/* form */}
           <div className="card team-details mt-3">
             <div className="card-body">
               <ul className="nav nav-tabs">
@@ -153,7 +194,7 @@ const ProviderView = () => {
                                 &nbsp;
                                 {data.email}
                               </li>
-                              
+
                               <li className="list-group-item border-0 ps-0  text-capitalize">
                                 <strong className="text-dark text-sm">
                                   Service:
@@ -177,8 +218,8 @@ const ProviderView = () => {
                             </div>
                           </div>
                           <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Address:</strong>{" "}
-                              {data.address}
+                            <strong className="text-dark">Address:</strong>{" "}
+                            {data.address}
                             &nbsp;
                           </li>
                           <li className="list-group-item border-0 ps-0  text-capitalize">
@@ -194,8 +235,125 @@ const ProviderView = () => {
                   </div>
                 </div>
                 <div id="booking" className="tab-pane fade">
-                  {/* Content for Booking tab goes here */}
-                  <p>This is the booking tab content.</p>
+                  <div className="row">
+                    <div className="col-lg-12 mb-3">
+                      <input
+                        type="text"
+                        className="form-control mb-2 w-20"
+                        style={{ float: "right" }}
+                        placeholder="Search by name..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <select
+                        className="btn btn-light me-3 m-0"
+                        style={{ float: "right" }}
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                      >
+                        <option className="text-center" value="all">
+                          All Status
+                        </option>
+                        <option className="text-center" value="completed">
+                          Completed
+                        </option>
+                        <option className="text-center" value="pending">
+                          Pending
+                        </option>
+                        {/* Uncomment the line below if needed */}
+                        {/* <option className="text-center" value="cancel">Cancelled</option> */}
+                      </select>
+                    </div>
+                    {currentPosts.map((item, index) => (
+                      <div className="col-lg-6 col-md-12" key={index}>
+                        <div
+                          className="card mb-3 shadow-lg"
+                          style={{ width: "100%", padding: "10px" }}
+                        >
+                          <div className="row no-gutters">
+                            <div className="col-md-4">
+                              <img
+                                src={
+                                  item.user.pfpImage ||
+                                  "../assets/img/no-dp.jpg"
+                                }
+                                className="card-img"
+                                style={{
+                                  width: "200px",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                }}
+                                alt="..."
+                              />
+                            </div>
+                            <div className="col-md-8">
+                              <div className="card-body">
+                                <div className="d-flex flex-column justify-content-center">
+                                  <h6 className="mb-0 card-title text-capitalize">
+                                    {index + 1}. {item.user.name}
+                                  </h6>
+                                  <p className="text-xs text-secondary mb-0">
+                                    Email: {item.user.email}
+                                  </p>
+                                </div>
+
+                                <p className="card-text">
+                                  <small className="text-muted">
+                                    Service: {item.service}
+                                  </small>
+                                  <br />
+                                  <small className="text-muted">
+                                    Status: {item.status}
+                                  </small>
+                                  <br />
+                                  <small className="text-muted">
+                                    Last updated:{" "}
+                                    {new Date(item.createdAt).toDateString()}
+                                  </small>
+                                  <br />
+                                  <small className="text-muted">
+                                    Payment: {item.payment_status}
+                                  </small>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {currentPosts.length === 0 && (
+                    <div className="text-center">
+                      <p>No results found.</p>
+                    </div>
+                  )}
+                  {/* Pagination */}
+                  <nav className="mt-4">
+                    <ul className="pagination justify-content-center">
+                      {Array.from(
+                        {
+                          length: Math.ceil(
+                            filteredPosts.length / postsPerPage
+                          ),
+                        },
+                        (_, index) => (
+                          <li
+                            className={`page-item ${
+                              index + 1 === currentPage ? "active" : ""
+                            }`}
+                            key={index}
+                          >
+                            <button
+                              className="page-link text-light"
+                              onClick={() => paginate(index + 1)}
+                            >
+                              {index + 1}
+                            </button>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </nav>
                 </div>
               </div>
             </div>

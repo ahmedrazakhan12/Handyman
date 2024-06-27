@@ -3,11 +3,15 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Pagination } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+
 const Users = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Number of items per page
 
   useEffect(() => {
     axios
@@ -16,7 +20,7 @@ const Users = () => {
         setData(res.data);
       })
       .catch((err) => {
-        console.log("ahmed", err);
+        console.log("Error fetching users:", err);
       });
   }, []);
 
@@ -25,20 +29,27 @@ const Users = () => {
     axios
       .get(`http://localhost:5000/user/search/${searchTerm}`)
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error searching users:", err);
       });
   };
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <>
       <Sidebar />
-      <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <Navbar />
-        <div className="container-fluid py-4  main-content position-relative  border-radius-lg ">
-          <div className="card  card-body blur shadow-blur  p-0 overflow-hidden ">
+        <div className="container-fluid py-4 main-content position-relative border-radius-lg ">
+          <div className="card card-body blur shadow-blur p-0 overflow-hidden">
             <div className="row pt-3 d-flex justify-content-between">
               <div className="col-6">
                 <h5
@@ -74,15 +85,11 @@ const Users = () => {
             </div>
           </div>
 
-          {/* table */}
-
-          <div
-            className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg"
-            style={{ maxHeight: "90vh", overflow: "scroll" }}
-          >
-            <div className="table-responsive p-2   ">
+          {/* Table */}
+          <div className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg">
+            <div className="table-responsive p-2">
               <div style={{ float: "right" }}>
-                <div className="input-group   p-1">
+                <div className="input-group p-1">
                   <span className="input-group-text text-body">
                     <i className="fas fa-search" aria-hidden="true" />
                   </span>
@@ -94,7 +101,7 @@ const Users = () => {
                   />
                 </div>
               </div>
-              <table className="table align-items-center  ">
+              <table className="table align-items-center">
                 <thead>
                   <tr>
                     <th style={{ width: "5px" }}></th>
@@ -105,101 +112,119 @@ const Users = () => {
                       Joining date
                     </th>
                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                      contact number
+                      Contact number
                     </th>
                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                      address
+                      Address
                     </th>
                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                      action
+                      Action
                     </th>
-
                     <th className="text-secondary opacity-7" />
                   </tr>
                 </thead>
-                {data.map((item, index) => {
-                  return (
-                    <tbody>
-                      <>
-                        <tr>
-                          <td>{index + 1}.</td>
-                          <td>
-                            <div className="d-flex px-2 py-1">
-                              <Link to={`/user-data/${item.id}`}>
-                                <div>
-                                  <span className="text-xs text-secondary mb-0 me-2"></span>
-                                  {item.pfpImage ? (
-                                    <img
-                                      src={item.pfpImage}
-                                      className="avatar avatar-sm me-3 "
-                                      style={{ objectFit: "cover" }}
-                                      alt="user1"
-                                    />
-                                  ) : (
-                                    <img
-                                      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                      className="avatar avatar-sm me-3"
-                                      alt="user1"
-                                    />
-                                  )}
-                                </div>
-                              </Link>
-                              <div className="d-flex flex-column justify-content-center">
-                                <Link to={`/user-data/${item.id}`}>
-                                  <h6 className="mb-0 text-sm text-capitalize">
-                                    {item.name}
-                                  </h6>
-                                  <p className="text-xs text-secondary mb-0">
-                                    {item.email}
-                                  </p>
-                                </Link>
-                              </div>
+                <tbody>
+                  {currentItems.map((item, index) => (
+                    <tr key={index}>
+                      <td>{index + 1 + indexOfFirstItem}.</td>
+                      <td>
+                        <div className="d-flex px-2 py-1">
+                          <Link to={`/user-data/${item.id}`}>
+                            <div>
+                              <span className="text-xs text-secondary mb-0 me-2"></span>
+                              {item.pfpImage ? (
+                                <img
+                                  src={item.pfpImage}
+                                  className="avatar avatar-sm me-3"
+                                  style={{ objectFit: "cover" }}
+                                  alt="user1"
+                                />
+                              ) : (
+                                <img
+                                  src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                  className="avatar avatar-sm me-3"
+                                  alt="user1"
+                                />
+                              )}
                             </div>
-                          </td>
-
-                          <td>
-                            <p className="text-xs font-weight-bold mb-0 ">
-                              {new Date(item.createdAt).toLocaleDateString()}
-                            </p>
-                          </td>
-                          <td className="align-middle text-center text-sm">
-                            <p className="text-xs font-weight-bold mb-0">
-                              {item.contact}
-                            </p>
-                          </td>
-                          <td className="align-middle text-center">
-                            <span className="text-secondary text-xs font-weight-bold">
-                              {item.address}
-                            </span>
-                          </td>
-                          <td className="align-middle text-center">
-                            <span className="text-secondary text-xs font-weight-bold">
-                              <Link
-                                to={`/edit-customer/${item.id}`}
-                                className="text-secondary font-weight-bold text-xs"
-                              >
-                                Edit
-                              </Link>
-                              {/* <button
-                                className="btn btn-primary"
-                                style={{
-                                  paddingLeft: "25px",
-                                  paddingRight: "25px",
-                                }}
-                                onClick={() =>
-                                  navigate(`/edit-customer/${item.id}`)
-                                }
-                              >
-                                Edit
-                              </button> */}
-                            </span>
-                          </td>
-                        </tr>
-                      </>
-                    </tbody>
-                  );
-                })}
+                          </Link>
+                          <div className="d-flex flex-column justify-content-center">
+                            <Link to={`/user-data/${item.id}`}>
+                              <h6 className="mb-0 text-sm text-capitalize">
+                                {item.name}
+                              </h6>
+                              <p className="text-xs text-secondary mb-0">
+                                {item.email}
+                              </p>
+                            </Link>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p className="text-xs font-weight-bold mb-0">
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </p>
+                      </td>
+                      <td className="align-middle text-center text-sm">
+                        <p className="text-xs font-weight-bold mb-0">
+                          {item.contact}
+                        </p>
+                      </td>
+                      <td className="align-middle text-center">
+                        <span className="text-secondary text-xs font-weight-bold">
+                          {item.address}
+                        </span>
+                      </td>
+                      <td className="align-middle text-center">
+                        <span className="text-secondary text-xs font-weight-bold">
+                          <Link
+                            to={`/edit-customer/${item.id}`}
+                            className="text-secondary font-weight-bold text-xs"
+                          >
+                            Edit
+                          </Link>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
+            </div>
+           <div style={{display:"flex",justifyContent:"center"}}>
+           <Pagination>
+                {[...Array(Math.ceil(data.length / itemsPerPage)).keys()].map(
+                  (number) => {
+                    // Calculate the start and end range of pagination items to display
+                    const startRange = currentPage <= 6 ? 1 : currentPage - 5;
+                    const endRange =
+                      startRange + 9 > Math.ceil(data.length / itemsPerPage)
+                        ? Math.ceil(data.length / itemsPerPage)
+                        : startRange + 9;
+
+                    // Only render items within the calculated range
+                    if (number + 1 >= startRange && number + 1 <= endRange) {
+                      return (
+                        <Pagination.Item
+                          key={number + 1}
+                          active={number + 1 === currentPage}
+                          onClick={() => paginate(number + 1)}
+                        >
+                          <span className="text-dark text-xs font-weight-bold">{number + 1}</span>
+                        </Pagination.Item>
+                      );
+                    } else {
+                      return null;
+                    }
+                  }
+                )}
+              </Pagination>
+           </div>
+          </div>
+
+          {/* Pagination */}
+          <div className="row">
+            <div className="col-lg-6">
+             
             </div>
           </div>
         </div>

@@ -14,26 +14,16 @@ const Servicebooking = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       // Define foreign key relationship to User table
-      references: {
-        model: "users",
-        key: "id",
-      },
+      
     },
     provider_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       // Define foreign key relationship to User table
-      references: {
-        model: "users",
-        key: "id",
-      },
+     
     },
     service: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     time: {

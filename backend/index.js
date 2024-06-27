@@ -6,6 +6,7 @@ const app = express();
 const adminRoute = require("./routes/Adminroute");
 const userRoute = require("./routes/userroutes");
 const providerRoute = require("./routes/providerroutes");
+const serviceBookingRoute = require("./routes//bookingroutes");
 const db = require("./models"); // Adjust the path as necessary
 
 // Middlewares
@@ -27,6 +28,7 @@ db.sequelize
 app.use("/admin", adminRoute);
 app.use("/user", userRoute);
 app.use("/provider", providerRoute);
+app.use("/booking", serviceBookingRoute);
 
 
 
