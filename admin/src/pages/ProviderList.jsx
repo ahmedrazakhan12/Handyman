@@ -4,13 +4,14 @@ import Navbar from "../components/Navbar";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Pagination } from "react-bootstrap";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGreaterThan } from '@fortawesome/free-solid-svg-icons';
 const ProviderList = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Adjust items per page as needed
+  const [itemsPerPage] = useState(10); // Adjust items per page as needed
 
   useEffect(() => {
     axios
@@ -36,9 +37,18 @@ const ProviderList = () => {
   };
 
   // Pagination handling
+  const prevPage = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
+
+  // Next page handler
+  const nextPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+  const totalPages = Math.ceil(data.length / itemsPerPage);
 
   // Calculate current items to display based on currentPage and itemsPerPage
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -59,7 +69,7 @@ const ProviderList = () => {
               navbar-scroll="true"
             >
               <div className="container-fluid py-1 px-3">
-                <nav aria-label="breadcrumb">
+                <nav aria-label="breadcrumb" style={{display:"flex"}}>
                   <h6 className="font-weight-bolder mb-0">
                     Provider | Provider Lists
                   </h6>
@@ -141,7 +151,7 @@ const ProviderList = () => {
                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                       action
                     </th>
-                    <th className="text-secondary opacity-7" />
+                    {/* <th className="text-secondary opacity-7" /> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -214,6 +224,8 @@ const ProviderList = () => {
 
             {/* Pagination */}
             <Pagination className="mt-3 justify-content-center " >
+            <Pagination.Prev onClick={prevPage} disabled={currentPage === 1} />
+
               {[...Array(Math.ceil(data.length / itemsPerPage)).keys()].map(
                 (number) => {
                   // Limit pagination items to maximum of 10
@@ -223,13 +235,22 @@ const ProviderList = () => {
                     number + 1 <= Math.ceil(data.length / itemsPerPage)
                   ) {
                     return (
+                      
                       <Pagination.Item
                         key={number + 1}
                         active={number + 1 === currentPage}
                         onClick={() => paginate(number + 1)}
                         
                       >
-                        <span className="text-dark text-xs font-weight-bold">{number + 1}</span>
+                        <span
+                            className={
+                              number === currentPage - 1
+                                ? " text-light text-xs font-weight-bold"
+                                : "text-dark text-xs font-weight-bold"
+                            }
+                          >
+                            {number + 1}
+                          </span>
                       </Pagination.Item>
                     );
                   } else {
@@ -237,6 +258,8 @@ const ProviderList = () => {
                   }
                 }
               )}
+                    <Pagination.Next onClick={nextPage} disabled={currentPage === totalPages} />
+
             </Pagination>
           </div>
         </div>

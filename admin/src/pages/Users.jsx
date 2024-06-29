@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Pagination } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import { Pagination, Button } from "react-bootstrap"; // Assuming you have react-bootstrap installed
 
 const Users = () => {
   const navigate = useNavigate();
@@ -42,6 +42,29 @@ const Users = () => {
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  // Calculate the range of pagination items to display
+  const maxPagesToShow = 10;
+  const startIndex = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  const endIndex = Math.min(startIndex + maxPagesToShow - 1, totalPages);
+
+  // Generate the range of pagination items to display
+  const pageNumbers = [...Array(endIndex - startIndex + 1).keys()].map(
+    (number) => startIndex + number
+  );
+
+  // Function to handle next button click
+  const nextPage = () => {
+    setCurrentPage((prevCurrentPage) => prevCurrentPage + 1);
+  };
+
+  // Function to handle previous button click
+  const prevPage = () => {
+    setCurrentPage((prevCurrentPage) => prevCurrentPage - 1);
+  };
 
   return (
     <>
@@ -141,7 +164,7 @@ const Users = () => {
                                 />
                               ) : (
                                 <img
-                                  src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                  src="../assets/img/no-dp.jpg"
                                   className="avatar avatar-sm me-3"
                                   alt="user1"
                                 />
@@ -190,42 +213,39 @@ const Users = () => {
                 </tbody>
               </table>
             </div>
-           <div style={{display:"flex",justifyContent:"center"}}>
-           <Pagination>
-                {[...Array(Math.ceil(data.length / itemsPerPage)).keys()].map(
-                  (number) => {
-                    // Calculate the start and end range of pagination items to display
-                    const startRange = currentPage <= 6 ? 1 : currentPage - 5;
-                    const endRange =
-                      startRange + 9 > Math.ceil(data.length / itemsPerPage)
-                        ? Math.ceil(data.length / itemsPerPage)
-                        : startRange + 9;
+            {/* Pagination */}
+            <div className="d-flex justify-content-center">
+              <Pagination>
+                {/* Previous Button */}
+                <Pagination.Prev
+                  onClick={prevPage}
+                  disabled={currentPage === 1}
+                />
 
-                    // Only render items within the calculated range
-                    if (number + 1 >= startRange && number + 1 <= endRange) {
-                      return (
-                        <Pagination.Item
-                          key={number + 1}
-                          active={number + 1 === currentPage}
-                          onClick={() => paginate(number + 1)}
-                        >
-                          <span className="text-dark text-xs font-weight-bold">{number + 1}</span>
-                        </Pagination.Item>
-                      );
-                    } else {
-                      return null;
-                    }
-                  }
-                )}
+                {/* Pagination Items */}
+                {pageNumbers.map((number) => (
+                  <Pagination.Item
+                    key={number}
+                    active={number === currentPage}
+                    onClick={() => paginate(number)}
+                  >
+                    <span
+                      className={number === currentPage ? "text-light" : ""}
+                    >
+                      {number}
+                    </span>
+                  </Pagination.Item>
+                ))}
+
+                {/* Next Button */}
+                <Pagination.Next
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                />
               </Pagination>
-           </div>
-          </div>
-
-          {/* Pagination */}
-          <div className="row">
-            <div className="col-lg-6">
-             
             </div>
+
+            {/* Load More Button */}
           </div>
         </div>
       </main>

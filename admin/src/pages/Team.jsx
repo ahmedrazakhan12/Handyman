@@ -43,10 +43,23 @@ const Team = () => {
     setCurrentPage(pageNumber);
   };
 
+  // Previous page handler
+  const prevPage = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
+
+  // Next page handler
+  const nextPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
   // Calculate current items to display based on currentPage and itemsPerPage
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calculate total number of pages
+  const totalPages = Math.ceil(data.length / itemsPerPage);
 
   return (
     <>
@@ -182,6 +195,8 @@ const Team = () => {
                   </div>
                   {/* Pagination */}
                   <Pagination className="justify-content-center mt-3">
+                    <Pagination.Prev onClick={prevPage} disabled={currentPage === 1} />
+
                     {[
                       ...Array(Math.ceil(data.length / itemsPerPage)).keys(),
                     ].map((number) => (
@@ -190,9 +205,19 @@ const Team = () => {
                         active={number + 1 === currentPage}
                         onClick={() => paginate(number + 1)}
                       >
-                        {number + 1}
+                        <span
+                          className={
+                            number === currentPage - 1
+                              ? " text-light text-xs font-weight-bold"
+                              : "text-dark text-xs font-weight-bold"
+                          }
+                        >
+                          {number + 1}
+                        </span>
                       </Pagination.Item>
                     ))}
+
+                    <Pagination.Next onClick={nextPage} disabled={currentPage === totalPages} />
                   </Pagination>
                 </div>
               </div>

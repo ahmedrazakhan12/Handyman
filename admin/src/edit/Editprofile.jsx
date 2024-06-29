@@ -75,14 +75,14 @@ const Editprofile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formData = new FormData();
     formData.append("id", adminData.id);
     formData.append("username", username);
     formData.append("email", email);
     formData.append("description", description);
     formData.append("pfpImage", pfpImage);
-  
+
     try {
       const response = await axios.put(
         "http://localhost:5000/admin/editProfile",
@@ -96,11 +96,9 @@ const Editprofile = () => {
       console.log("Edit-Profile: ", response.data);
       navigate("/profile");
     } catch (error) {
-        console.error("Error setting up the request:", error.message);
+      console.error("Error setting up the request:", error.message);
     }
   };
-    
-
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
@@ -128,46 +126,91 @@ const Editprofile = () => {
   //     console.error("Failed to Edit-Profile: ", error);
   //   }
   // };
-    // const handleImageDelete = () => {
-    //   Swal.fire({
-    //     title: "Are you sure?",
-    //     text: "Do you really want to delete the profile image?",
-    //     icon: "warning",
-    //     showCancelButton: true,
-    //     confirmButtonColor: "#3085d6",
-    //     cancelButtonColor: "#d33",
-    //     confirmButtonText: "Yes, delete it!",
-    //   }).then((result) => {
-    //     if (result.isConfirmed) {
-    //       setImagePreviewUrl("../assets/img/no-dp.jpg");
-    //       axios
-    //         .put(`http://localhost:5000/admin/imageDel/${adminData.id}`)
-    //         .then((res) => {
-    //           Swal.fire(
-    //             "Deleted!",
-    //             "Your profile image has been deleted.",
-    //             "success"
-    //           );
+  // const handleImageDelete = () => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "Do you really want to delete the profile image?",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, delete it!",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       setImagePreviewUrl("../assets/img/no-dp.jpg");
+  //       axios
+  //         .put(`http://localhost:5000/admin/imageDel/${adminData.id}`)
+  //         .then((res) => {
+  //           Swal.fire(
+  //             "Deleted!",
+  //             "Your profile image has been deleted.",
+  //             "success"
+  //           );
 
-    //           console.log("Image Removed: ", res.data);
-    //         })
-    //         .catch((err) => {
-    //           Swal.fire(
-    //             "Error!",
-    //             "There was an error deleting your profile image.",
-    //             "error"
-    //           );
-    //           console.log(err);
-    //         });
-    //     }
-    //   });
-    // };
+  //           console.log("Image Removed: ", res.data);
+  //         })
+  //         .catch((err) => {
+  //           Swal.fire(
+  //             "Error!",
+  //             "There was an error deleting your profile image.",
+  //             "error"
+  //           );
+  //           console.log(err);
+  //         });
+  //     }
+  //   });
+  // };
   return (
     <>
       <Sidebar />
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <Navbar />
-
+        <div
+          className="card  card-body blur shadow-blur  p-0 overflow-hidden mt-3 container-fluid"
+          style={{ width: "93%" }}
+        >
+          <nav
+            className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
+            id="navbarBlur"
+            navbar-scroll="true"
+          >
+            <div className="container-fluid py-1 px-3">
+              <nav aria-label="breadcrumb">
+                <h6 className="font-weight-bolder mb-0 ">
+                  Profile | Edit Profile{" "}
+                </h6>
+              </nav>
+              <div
+                className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
+                id="navbar"
+              >
+                <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
+                <ul className="navbar-nav  justify-content-end">
+                  <li className="nav-item d-flex align-items-center ">
+                    <button
+                      className="btn btn-primary m-0"
+                      onClick={() => navigate("/profile")}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={18}
+                        height={18}
+                        style={{ marginRight: "4px", marginTop: "-5px" }}
+                        viewBox="0 0 512 512"
+                      >
+                        <path
+                          fill="white"
+                          d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"
+                        />
+                      </svg>{" "}
+                      <span className="">Back</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
         <div className="editProfile">
           <div className="container">
             <form className="form-horizontal" onSubmit={handleSubmit}>
@@ -230,12 +273,12 @@ const Editprofile = () => {
                     />
                   </div>
                 </div>
-                <div className="form-flex-item">
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
+                <div className=" form-flex-item">
+                  <div className="card panel panel-default ">
+                    <div className="panel-heading ">
                       <h4 className="panel-title">User info</h4>
                     </div>
-                    <div className="panel-body">
+                    <div className="panel-body card">
                       <div className="form-group">
                         <label className="control-label">Username</label>
                         <input
