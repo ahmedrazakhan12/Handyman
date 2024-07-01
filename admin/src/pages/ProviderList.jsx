@@ -5,7 +5,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Pagination } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGreaterThan } from '@fortawesome/free-solid-svg-icons';
+import { faGreaterThan, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 const ProviderList = () => {
   const navigate = useNavigate();
 
@@ -80,7 +80,7 @@ const ProviderList = () => {
                 >
                   <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
                   <ul className="navbar-nav  justify-content-end">
-                    <li className="nav-item d-flex align-items-center ">
+                    {/* <li className="nav-item d-flex align-items-center ">
                       <button
                         className="btn btn-primary m-0 "
                         onClick={() => navigate("/add-provider")}
@@ -99,7 +99,7 @@ const ProviderList = () => {
                         </svg>{" "}
                         Add provider
                       </button>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </div>
@@ -111,15 +111,14 @@ const ProviderList = () => {
             style={{ maxHeight: "90vh" }}
           >
             <div className="table-responsive p-2">
-              <div
-                style={{
-                  float: "right",
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                }}
-              >
-                <div className="input-group p-1">
+            <div
+                  className="card-header p-2"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div className="input-group p-0 w-20">
                   <span className="input-group-text text-body">
                     <i className="fas fa-search" aria-hidden="true" />
                   </span>
@@ -130,9 +129,13 @@ const ProviderList = () => {
                     onChange={handleSearchChange}
                   />
                 </div>
-              </div>
+                  <Link to="/add-provider">
+                    <FontAwesomeIcon icon={faUserPlus} />
+                  </Link>
+                </div>
+              
 
-              <table className="table align-items-center" style={{ overflow: "scroll", marginTop: "50px" }}>
+              <table className="table align-items-center" style={{ overflow: "scroll", marginTop: "10px" }}>
                 <thead>
                   <tr>
                     <th style={{ width: "5px" }}></th>
@@ -172,7 +175,7 @@ const ProviderList = () => {
                                 />
                               ) : (
                                 <img
-                                  src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                  src="../assets/img/no-dp.jpg"
                                   className="avatar avatar-sm me-3"
                                   alt="user1"
                                 />

@@ -5,6 +5,8 @@ import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Pagination, Button } from "react-bootstrap"; // Assuming you have react-bootstrap installed
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 const Users = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,12 +75,12 @@ const Users = () => {
         <Navbar />
         <div className="container-fluid py-4 main-content position-relative border-radius-lg ">
           <div className="card card-body blur shadow-blur p-0 overflow-hidden">
-            <div className="row pt-3 d-flex justify-content-between">
+            <div className="row p-2  d-flex justify-content-between">
               <div className="col-6">
                 <h5
+                className="px-3 py-2"
                   style={{
-                    marginLeft: "20px",
-                    marginTop: "5px",
+                    padding:"0px",
                     fontSize: "20px",
                   }}
                 >
@@ -86,24 +88,7 @@ const Users = () => {
                 </h5>
               </div>
               <div className="col-6">
-                <button
-                  className="btn btn-primary float-end me-3"
-                  onClick={() => navigate("/add-customer")}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                    width={20}
-                    height={20}
-                    style={{ marginRight: "4px", marginTop: "-5px" }}
-                  >
-                    <path
-                      fill="white"
-                      d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
-                    />
-                  </svg>{" "}
-                  Add user
-                </button>
+               
               </div>
             </div>
           </div>
@@ -111,8 +96,15 @@ const Users = () => {
           {/* Table */}
           <div className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg">
             <div className="table-responsive p-2">
-              <div style={{ float: "right" }}>
-                <div className="input-group p-1">
+             
+              <div
+                  className="card-header p-2"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div className="input-group p-0 w-20">
                   <span className="input-group-text text-body">
                     <i className="fas fa-search" aria-hidden="true" />
                   </span>
@@ -123,7 +115,10 @@ const Users = () => {
                     onChange={handleSearchChange}
                   />
                 </div>
-              </div>
+                  <Link to="/add-customer">
+                    <FontAwesomeIcon icon={faUserPlus} />
+                  </Link>
+                </div>
               <table className="table align-items-center">
                 <thead>
                   <tr>
@@ -200,11 +195,27 @@ const Users = () => {
                       </td>
                       <td className="align-middle text-center">
                         <span className="text-secondary text-xs font-weight-bold">
+                          {/* <Link
+                            to={`/edit-password/${item.id}`}
+                            className="text-secondary font-weight-bold text-xs me-2"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 448 512"
+                              style={{
+                                width: "15px",
+                                height: "15px",
+                                fill: "grey",
+                              }}
+                            >
+                              <path d="M144 144c0-44.2 35.8-80 80-80c31.9 0 59.4 18.6 72.3 45.7c7.6 16 26.7 22.8 42.6 15.2s22.8-26.7 15.2-42.6C331 33.7 281.5 0 224 0C144.5 0 80 64.5 80 144v48H64c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H144V144z" />
+                            </svg>
+                          </Link> */}
                           <Link
                             to={`/edit-customer/${item.id}`}
                             className="text-secondary font-weight-bold text-xs"
                           >
-                            Edit
+                          Edit
                           </Link>
                         </span>
                       </td>
@@ -214,6 +225,11 @@ const Users = () => {
               </table>
             </div>
             {/* Pagination */}
+            {data.length === 0 && (
+              <div className="d-flex justify-content-center">
+              <p className="text-secondary">No Data Found</p>
+            </div>
+            )}
             <div className="d-flex justify-content-center">
               <Pagination>
                 {/* Previous Button */}

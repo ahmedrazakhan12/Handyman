@@ -211,7 +211,7 @@ const UserData = () => {
                     <div className="card-body p-1">
                       <ul className="list-group ">
                         <div className="row ">
-                          <div className="col-lg-6">
+                          <div className="col-lg-5">
                             <li className="list-group-item border-0 text-sm text-capitalize">
                               <strong className="text-dark">Name:</strong>{" "}
                               <span style={{ display: "block" }}>

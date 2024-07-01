@@ -13,15 +13,17 @@ const userModel = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+
     },
     email: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+
     },
     contact: {
-      type: DataTypes.STRING, // Define contact as STRING to store phone numbers
-      allowNull: true,
+      type: DataTypes.BIGINT, // Define contact as STRING to store phone numbers
+      allowNull: false,
     },
     pfpImage: {
       type: DataTypes.STRING,
@@ -29,8 +31,8 @@ const userModel = sequelize.define(
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
+      allowNull: false,
+  },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -52,7 +54,7 @@ const userModel = sequelize.define(
       allowNull: true,
     },
     postalCode: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: true,
     },
     // area: {

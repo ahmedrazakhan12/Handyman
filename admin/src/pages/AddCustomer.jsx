@@ -18,9 +18,7 @@ const AddCustomer = () => {
     confirmPassword: "",
   });
   const [pfpImage, setPfpImage] = useState(null); // Separate state for the file
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(
-    "../assets/img/no-dp.jpg"
-  ); // State for image preview
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(""); // State for image preview
 
   const handleChange = (e) => {
     if (e.target.name === "pfpImage") {
@@ -38,17 +36,17 @@ const AddCustomer = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Passwords do not match!",
-        timer: 1000,
-      });
-      setError(true);
-      return;
-    }
-    setError(false);
+    // if (formData.password !== formData.confirmPassword) {
+    //   swal.fire({
+    //     icon: "error",
+    //     title: "Oops...",
+    //     text: "Passwords do not match!",
+    //     timer: 1000,
+    //   });
+    //   setError(true);
+    //   return;
+    // }
+    // setError(false);
 
     const data = new FormData();
     data.append("name", formData.name);
@@ -220,7 +218,7 @@ const AddCustomer = () => {
                               .then((result) => {
                                 if (result.isConfirmed) {
                                   // User confirmed, proceed with action
-                                  setPfpImage("null1");
+                                  setPfpImage(null);
                                   setImagePreviewUrl("../assets/img/no-dp.jpg");
                                   swal.fire(
                                     "Removed!",
@@ -257,8 +255,13 @@ const AddCustomer = () => {
                           <path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z" />
                         </svg>
                       </div>
+
                       <img
-                        src={imagePreviewUrl || "../assets/img/no-dp.jpg"}
+                        src={
+                          imagePreviewUrl ||
+                          formData.pfpImage ||
+                          "../assets/img/no-dp.jpg"
+                        }
                         className="form img-thumbnail"
                         alt="Preview"
                         style={{
@@ -352,11 +355,11 @@ const AddCustomer = () => {
 
                 <div className="row mt-4">
                   <div className="col-lg-12">
-                    {error === true && (
+                    {/* {error === true && (
                       <p className="text-danger text-center">
                         Passwords doesn't match
                       </p>
-                    )}
+                    )} */}
 
                     {errorMessage && (
                       <p className="text-danger text-center">{errorMessage}</p>
@@ -365,27 +368,29 @@ const AddCustomer = () => {
                       Save
                     </button>
                     <button
-                    type="button"
-                    onClick={() => {
-                      swal.fire({
-                        title: "Unsaved Changes",
-                        text: "Are you sure want to discard your changes?.",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, Unsaved it!",
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          navigate("/customers");
-                        }
-                      });
-                    }}
-                    className="btn btn-secondary me-2"
-                    style={{ float: "right" }}
-                  >
-                    Cancel
-                  </button>
+                      type="button"
+                      onClick={() => {
+                        swal
+                          .fire({
+                            title: "Unsaved Changes",
+                            text: "Are you sure want to discard your changes?.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, Unsaved it!",
+                          })
+                          .then((result) => {
+                            if (result.isConfirmed) {
+                              navigate("/customers");
+                            }
+                          });
+                      }}
+                      className="btn btn-secondary me-2"
+                      style={{ float: "right" }}
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </div>
               </div>

@@ -30,6 +30,8 @@ const AddProvider = () => {
     address: "",
     service: "",
   });
+
+  console.log("dsdsdsd",formData.confirmPassword);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(
     "../assets/img/no-dp.jpg"
   ); // State for image preview
@@ -84,6 +86,7 @@ const AddProvider = () => {
     data.append("contact", formData.contact);
     data.append("address", formData.address);
     data.append("password", formData.password);
+    data.append("confirmPassword", formData.confirmPassword);
     data.append("service", formData.service); // Add city to FormData
     data.append("country", formData.country); // Add country to FormData
     data.append("region", formData.region); // Add city to FormData
@@ -113,7 +116,7 @@ const AddProvider = () => {
           swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "Email already exists!",
+            text: err.response.data.message,
             timer: 1000,
           });
         } else {
@@ -535,16 +538,38 @@ const AddProvider = () => {
 
                 <div className="row mt-4">
                   <div className="col-lg-12">
-                    {error === true && (
-                      <p className="text-danger text-center">
-                        Passwords doesn't match
-                      </p>
-                    )}
+                   
 
                     {errorMessage && (
                       <p className="text-danger text-center">{errorMessage}</p>
                     )}
-                    <button className="btn btn-primary w-100">Save</button>
+                   <button type="submit" className="btn btn-primary w-10 float-end m-0">
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        swal
+                          .fire({
+                            title: "Unsaved Changes",
+                            text: "Are you sure want to discard your changes?.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, Unsaved it!",
+                          })
+                          .then((result) => {
+                            if (result.isConfirmed) {
+                              navigate("/providerList");
+                            }
+                          });
+                      }}
+                      className="btn btn-secondary me-2"
+                      style={{ float: "right" }}
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </div>
               </div>

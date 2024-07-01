@@ -11,6 +11,8 @@ const EditProvider = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [pfpImage, setPfpImage] = useState(null); // Separate state for the file
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -82,7 +84,17 @@ const EditProvider = () => {
         navigate("/providerList");
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          setErrorMessage(err.response.data.message);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err.response.data.message,
+            timer: 1000,
+          });
+        } else {
+          setErrorMessage("An error occurred. Please try again.");
+        }
       });
   };
 
@@ -108,13 +120,20 @@ const EditProvider = () => {
               timer: 1000,
             });
             navigate("/providerList");
+            // setErrorMessage(null);
+
+            
           })
           .catch((err) => {
-            console.log(err);
+           
+            console.error("Failed to Edit-Profile: ", err);
           });
+          
       }
     });
   };
+
+
   return (
     <>
       <Sidebar />
@@ -346,6 +365,7 @@ const EditProvider = () => {
                                     name="name"
                                     value={data.name || ""}
                                     onChange={handleChange}
+                                    required
                                   />
                                 </li>
                                 <li className="list-group-item border-0 text-capitalize">
@@ -353,11 +373,11 @@ const EditProvider = () => {
                                     Select Provider Type:
                                   </strong>{" "}
                                   <select
-                                    required
+                                    
                                     className="form-select w-150"
                                     aria-label="Select Service Provider Type"
                                     name="service"
-                                    onChange={handleChange} // Replace handleChange with your actual handler function
+                                    onChange={handleChange}
                                   >
                                     <option value="">
                                       Select Service Provider Type
@@ -394,6 +414,7 @@ const EditProvider = () => {
                                     name="country"
                                     value={data.country || ""}
                                     onChange={handleChange}
+                                    required
                                   />
                                 </li>
                                 <li className="list-group-item border-0 text-capitalize">
@@ -406,6 +427,7 @@ const EditProvider = () => {
                                     name="city"
                                     value={data.city || ""}
                                     onChange={handleChange}
+                                    required
                                   />
                                 </li>
                               </div>
@@ -418,6 +440,7 @@ const EditProvider = () => {
                                     name="email"
                                     value={data.email || ""}
                                     onChange={handleChange}
+                                    required
                                   />
                                 </li>
 
@@ -431,6 +454,7 @@ const EditProvider = () => {
                                     name="contact"
                                     value={data.contact || ""}
                                     onChange={handleChange}
+                                    required
                                   />
                                 </li>
 
@@ -442,6 +466,7 @@ const EditProvider = () => {
                                     name="region"
                                     value={data.region || ""}
                                     onChange={handleChange}
+                                    required
                                   />
                                 </li>
 
@@ -455,6 +480,7 @@ const EditProvider = () => {
                                     name="postalCode"
                                     value={data.postalCode || ""}
                                     onChange={handleChange}
+                                    required
                                   />
                                 </li>
                               </div>
@@ -471,6 +497,7 @@ const EditProvider = () => {
                             className="form-control"
                             style={{ minHeight: "100px" }}
                             onChange={handleChange}
+                            required
                           ></textarea>
                         </li>
                       </ul>
@@ -480,7 +507,9 @@ const EditProvider = () => {
                     {/* Content for Booking tab goes here */}
                     <p>This is the booking tab content.</p>
                   </div>
-
+                  {errorMessage && (
+                      <p className="text-danger text-center">{errorMessage}</p>
+                    )}
                   <button
                     type="submit"
                     className="btn btn-primary"

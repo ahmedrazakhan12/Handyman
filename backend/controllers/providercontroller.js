@@ -4,6 +4,19 @@ const bcrypt = require("bcryptjs"); // Import bcryptjs for password hashing
 const userModel = db.userModel;
 const { Sequelize } = require("sequelize"); // Import Sequelize
 
+const {
+  validateName,
+  validateEmail,
+  validateContact,
+  validatePassword,
+  validServiceType,
+  validateCountry,
+  validateState,
+  validatePostalCode,
+  validateCity,
+  validateAddress,
+} = require("../middlewares/Validate");
+
 exports.register = async (req, res) => {
   try {
     const {
@@ -14,23 +27,55 @@ exports.register = async (req, res) => {
       address,
       status,
       service,
+      region,
       country,
+      
       city,
       postalCode,
+      confirmPassword
     } = req.body;
-    console.log(
-      "Formdata:",
-      name,
-      email,
-      password,
-      contact,
-      address,
-      status,
-      service,
-      country,
-      city,
-      postalCode
-    );
+
+    // console.log("name: " , name , "email: " , email , "password: " , password ,"confirmPassword" , confirmPassword);
+
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const contactError = validateContact(contact);
+    const passwordError = validatePassword(password , confirmPassword);
+    const serviceError = validServiceType(service);
+    const countryError = validateCountry(country);
+    const stateError = validateState(region);
+    const postalCodeError = validatePostalCode(postalCode);
+    const cityError = validateCity(city);
+    const addressError = validateAddress(address);
+
+    if (
+      nameError ||
+      emailError ||
+      contactError ||
+      passwordError ||
+      serviceError ||
+      countryError ||
+      stateError ||
+      postalCodeError ||
+      cityError ||
+      addressError
+    ) {
+      return res.status(400).json({
+        status: 400,
+        data: null,
+        message:
+          nameError ||
+          emailError ||
+          contactError ||
+          passwordError ||
+          serviceError ||
+          countryError ||
+          stateError ||
+          postalCodeError ||
+          cityError ||
+          addressError,
+      });
+    }
 
     let imagePath = null; // Changed from const to let
     // Check if req.file exists (new profile picture uploaded)
@@ -54,6 +99,7 @@ exports.register = async (req, res) => {
       country: country,
       city: city,
       postalCode: postalCode,
+      region:region
     });
 
     res.status(200).json({
@@ -63,17 +109,19 @@ exports.register = async (req, res) => {
     });
     console.log("User created:", user);
   } catch (error) {
-    console.error("Error receiving data from decoded token:", error);
+    if (error.name === "SequelizeDatabaseError" && error.original) {
+      res.status(400).json({
+        status: 400,
+        data: error,
+        message: ` ${error.original}`,
+      });
+    }
     if (error instanceof Sequelize.UniqueConstraintError) {
-      return res.status(400).json({
+      res.status(400).json({
         message: `Email: ${error.errors[0].value} is already registered.`,
       });
     }
-    res.status(500).json({
-      status: 500,
-      data: null,
-      message: "Internal server error.",
-    });
+    console.error("Error receiving data from decoded token:", error);
   }
 };
 
@@ -141,34 +189,47 @@ exports.updateProvider = async (req, res) => {
       country,
       city,
       postalCode,
+      region,
       pfpImage,
       createdAt,
     } = req.body;
 
-    // console.log(
-    //   "name: ",
-    //   name,
-    //   "email: ",
-    //   email,
-    //   "contact: ",
-    //   contact,
-    //   "address: ",
-    //   address,
-    //   "status: ",
-    //   "provider",
-    //   "service: ",
-    //   service,
-    //   "country: ",
-    //   country,
-    //   "city: ",
-    //   city,
-    //   "postalCode: ",
-    //   postalCode,
-    //   "image: ",
-    //   pfpImage,
-    //   "createdAt: ",
-    //   createdAt
-    // );
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const contactError = validateContact(contact);
+    const serviceError = validServiceType(service);
+    const countryError = validateCountry(country);
+    const stateError = validateState(region);
+    const postalCodeError = validatePostalCode(postalCode);
+    const cityError = validateCity(city);
+    const addressError = validateAddress(address);
+
+    if (
+      nameError ||
+      emailError ||
+      contactError ||
+      serviceError ||
+      countryError ||
+      stateError ||
+      postalCodeError ||
+      cityError ||
+      addressError
+    ) {
+      return res.status(400).json({
+        status: 400,
+        data: null,
+        message:
+          nameError ||
+          emailError ||
+          contactError ||
+          serviceError ||
+          countryError ||
+          stateError ||
+          postalCodeError ||
+          cityError ||
+          addressError,
+      });
+    }
 
     let imagePath = null; // Changed from const to let
     const imageIs = req.body.pfpImage;
@@ -187,6 +248,7 @@ exports.updateProvider = async (req, res) => {
       service,
       country,
       city,
+      region,
       postalCode,
     };
 
@@ -197,14 +259,24 @@ exports.updateProvider = async (req, res) => {
     if (imageIs === "null1") {
       updateFields.pfpImage = null;
     }
-    const updateProfile = await userModel.update(updateFields, { where: { id: id } });
+    const updateProfile = await userModel.update(updateFields, {
+      where: { id: id },
+    });
     res.send(updateProfile);
   } catch (error) {
-    res.status(500).json({
-      status: 500,
-      data: null,
-      message: "Internal server error.",
-    });
+    if (error.name === "SequelizeDatabaseError" && error.original) {
+      res.status(400).json({
+        status: 400,
+        data: error,
+        message: ` ${error.original}`,
+      });
+    }
+    if (error instanceof Sequelize.UniqueConstraintError) {
+      res.status(400).json({
+        message: `Email: ${error.errors[0].value} is already registered.`,
+      });
+    }
+    console.error("Error receiving data from decoded token:", error);
   }
 };
 
@@ -222,4 +294,4 @@ exports.deleteProvider = async (req, res) => {
       message: "Internal server error.",
     });
   }
-}
+};
