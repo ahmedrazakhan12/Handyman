@@ -5,6 +5,21 @@ require("dotenv").config();
 const privateKey = process.env.PRIVATE_KEY;
 const adminModel = db.adminModel;
 
+const {
+  validateName,
+  validateEmail,
+  validateContact,
+  validatePassword,
+  validServiceType,
+  validateCountry,
+  validateState,
+  validatePostalCode,
+  validateCity,
+  validateAddress,
+  validateDescription,
+  validateStatus,
+} = require("../middlewares/Validate");
+
 exports.userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -87,10 +102,56 @@ const upload = require("../middlewares/Multer");
 const multer = require("multer");
 // controllers/adminController.js
 
-
 exports.editPfp = async (req, res) => {
   try {
-    const { id, username, email, description  } = req.body;
+    const {
+      id,
+      username,
+      email,
+      contact,
+      description,
+      country,
+      postalCode,
+      status,
+      address,
+    } = req.body;
+    console.log(
+      "Received data: ",
+
+      status
+    );
+    const nameError = validateName(username);
+    const emailError = validateEmail(email);
+    const contactError = validateContact(contact);
+    const countryError = validateCountry(country);
+    const postalCodeError = validatePostalCode(postalCode);
+    const addressError = validateAddress(address);
+    const validateDescriptionError = validateDescription(description);
+    const validateStatusError = validateStatus(status);
+    if (
+      nameError ||
+      emailError ||
+      contactError ||
+      countryError ||
+      postalCodeError ||
+      addressError ||
+      validateDescriptionError ||
+      validateStatusError
+    ) {
+      return res.status(400).json({
+        status: 400,
+        data: null,
+        message:
+          nameError ||
+          emailError ||
+          contactError ||
+          validateDescriptionError ||
+          countryError ||
+          postalCodeError ||
+          addressError ||
+          validateStatusError,
+      });
+    }
     const imageIs = req.body.pfpImage;
     let imagePath = null;
 
@@ -102,10 +163,9 @@ exports.editPfp = async (req, res) => {
       imagePath = `http://localhost:5000/public/uploads/pfp/${photoFileName}`;
     }
 
-  
     // Method to update adminModel by id
-    const editProfile = async (id, name, email, description, pfpImage) => {
-      const updateFields = { name, email, description };
+    const editProfile = async (id, name, email, contact , description  , country, postalCode, address,status ,pfpImage ) => {
+      const updateFields = { name, email, contact , description , country, postalCode, address, status };
 
       // Only add pfpImage to updateFields if imagePath is not null
       if (pfpImage !== null) {
@@ -120,9 +180,9 @@ exports.editPfp = async (req, res) => {
       return await adminModel.update(updateFields, { where: { id: id } });
     };
 
-    // Call editProfile to update user profile with the received data
-    await editProfile(id, username, email, description, imagePath);
-
+    // Call editProfile to update user profile with the received dataid, username, email, description, imagePath , country, postalCode, address, imageIs
+    await editProfile(id, username, email, contact , description, country, postalCode, address,status , imagePath);
+    
     res.status(200).json({ message: "Profile updated successfully" });
   } catch (error) {
     console.error("Error in editing profile:", error);
@@ -158,20 +218,101 @@ const bcrypt = require("bcryptjs"); // Import bcryptjs for password hashing
 // Register Admin
 exports.register = async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const {
+      name,
+      email,
+      contact,
+      description,
+      address,
+      postalCode,
+      password,
+      confirmPassword,
+      role,
+      country,
+    } = req.body;
+    // console.log(country);
 
-    // Input validation
-    if (!username || !email || !password || !role) {
-      return res.status(400).json({ message: "All fields are required" });
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const contactError = validateContact(contact);
+    const passwordError = validatePassword(password, confirmPassword);
+    const countryError = validateCountry(country);
+    const postalCodeError = validatePostalCode(postalCode);
+    const addressError = validateAddress(address);
+    const validateDescriptionError = validateDescription(description);
+    const validateStatusError = validateStatus(role);
+    if (
+      nameError ||
+      emailError ||
+      contactError ||
+      passwordError ||
+      countryError ||
+      postalCodeError ||
+      addressError ||
+      validateDescriptionError ||
+      validateStatusError
+    ) {
+      return res.status(400).json({
+        status: 400,
+        data: null,
+        message:
+          nameError ||
+          emailError ||
+          contactError ||
+          validateDescriptionError ||
+          countryError ||
+          postalCodeError ||
+          addressError ||
+          passwordError ||
+          validateStatusError,
+      });
+    }
+    const imageIs = req.body.pfpImage;
+    console.log(imageIs);
+    let imagePath = null;
+
+    // Check if req.file exists (new profile picture uploaded)
+    if (req.file) {
+      console.log("File received: ");
+      const photoFileName = req.file.filename;
+      console.log("PhotoFileName: ", photoFileName);
+      imagePath = `http://localhost:5000/public/uploads/pfp/${photoFileName}`;
     }
 
+    // Input validation
+    // console.log(
+    //   "name: ",
+    //   name,
+    //   "email: ",
+    //   email,
+    //   "password: ",
+    //   password,
+    //   "confirmPassword: ",
+    //   confirmPassword,
+    //   "role: ",
+    //   role,
+    //   "description: ",
+    //   description,
+    //   "contact: ",
+    //   contact,
+    //   "address: ",
+    //   address,
+    //   "postalCode: ",
+    //   postalCode
+    // );
     // Password hashing
     const hashedPassword = await bcrypt.hash(password, 10); // Hash password with bcrypt
 
     // Create admin record
-    const admin = await adminModel.create({
-      name: username,
+    await adminModel.create({
+      name: name,
       email: email,
+      contact: contact,
+      description: description,
+      address: address,
+      postalCode: postalCode,
+      country: country,
+      pfpImage: imagePath,
       password: hashedPassword, // Store hashed password
       role: role,
     });

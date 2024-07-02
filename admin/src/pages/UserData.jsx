@@ -134,14 +134,11 @@ const UserData = () => {
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <Navbar />
-        <div className="container-fluid py-4  main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-          <div className="content w-100">
-        
-        
-            <div className="w-96 " style={{marginLeft:'10px'}}>
+        {/* <Navbar /> */}
+        <div className="container-fluid  main-content position-relative border-radius-lg ">
+            {/* <div className="w-96 " style={{marginLeft:'10px'}}>
             <div className="card  card-body blur shadow-blur  p-0 overflow-hidden">
               <nav
                 className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
@@ -184,13 +181,11 @@ const UserData = () => {
                   </div>
                 </div>
               </nav>
-            </div>
-            
-            </div>
-            
-            <div className="container-fluid">
-            <div className="row mt-3">
-              <div className="card col-lg-12 col-md-12 p-4">
+            </div> */}
+
+          <div className="card card-body blur shadow-blur  p-0 overflow-hidden mt-4">
+          <div className="row mt-3">
+              <div className=" col-lg-12 col-md-12 p-4">
                 <div className="row">
                   <div className="col-lg-2 m-0 col-md-12 ">
                     <img
@@ -251,8 +246,13 @@ const UserData = () => {
                 </div>
               </div>
             </div>
-            </div>
+            
           </div>
+
+            {/* </div> */}
+            
+          
+           
         </div>
       </main>
     </>

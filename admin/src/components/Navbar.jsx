@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
-
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const Navbar = () => {
   const [adminData, setAdminData] = useState({});
   const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
@@ -57,7 +57,24 @@ const Navbar = () => {
     default:
       label = "";
   }
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.clear();
+   Swal.fire({
+      title: "Logout?",
+      text: "Are you sure?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Logout!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/sign-in");
+      }
+    });
+  };
   return (
     <nav
       className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
@@ -77,7 +94,40 @@ const Navbar = () => {
           <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
           <ul className="navbar-nav  justify-content-end">
             <li className="nav-item d-flex align-items-center ">
-              <Link to={`/profile`}>
+            <div class="dropdown" style={{marginRight:'100px'}}>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a
+                    class="dropdown-item"
+                    onClick={() => {
+                      navigate("/profile");
+                    }}
+                  >
+                    Profile
+                  </a>
+                  <a
+                    class="dropdown-item"
+                    onClick={() => {
+                      navigate("/profile/setting");
+                    }}
+                  >
+                    Setting
+                  </a>
+                  <a
+                    class="dropdown-item"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </a>
+                </div>
+              </div>
+              <span
+                // class=" drope"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
                 {adminData.pfpImage ? (
                   <img
                     src={adminData.pfpImage}
@@ -97,7 +147,8 @@ const Navbar = () => {
                     style={{ width: "50px", height: "50px" }}
                   />
                 )}
-              </Link>
+              </span>
+             
               {/* <a
                 className="btn btn-outline-primary btn-sm mb-0 me-3"
                 target="_blank"
@@ -259,10 +310,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-
-
 
 // import React, { useEffect, useState } from "react";
 // import axios from "axios";

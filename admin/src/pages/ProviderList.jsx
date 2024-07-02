@@ -57,12 +57,12 @@ const ProviderList = () => {
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-        <Navbar />
+        {/* <Navbar /> */}
 
-        <div className="container-fluid py-4  main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-          <div className="card  card-body blur shadow-blur  p-0 overflow-hidden">
+        <div className="container-fluid   main-content position-relative  border-radius-lg">
+          {/* <div className="card  card-body blur shadow-blur  p-0 overflow-hidden">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
@@ -99,12 +99,12 @@ const ProviderList = () => {
                         </svg>{" "}
                         Add provider
                       </button>
-                    </li> */}
+                    </li> *
                   </ul>
                 </div>
               </div>
             </nav>
-          </div>
+          </div> */}
 
           <div
             className="card-body px-0 pt-0 pt-2 pl-2 pb-1 pe-2 bg-white mt-4 shadow blur border-radius-lg"

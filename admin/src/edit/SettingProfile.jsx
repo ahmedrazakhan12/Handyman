@@ -99,10 +99,10 @@ const SettingProfile = () => {
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <Navbar />
-        <div
+        {/* <Navbar /> */}
+        {/* <div
           className="card  card-body blur shadow-blur  p-0 overflow-hidden container-fluid"
           style={{ width: "97%" }}
         >
@@ -147,97 +147,96 @@ const SettingProfile = () => {
               </div>
             </div>
           </nav>
-        </div>
-        <div
-          className="container-fluid mt-3  card main-content position-relative max-height-vh-100 h-100 border-radius-lg "
-          style={{ width: "97%" }}
-        >
-          <div className="card-body px-0 pb-2  p-3 ">
-            <div
-              className="d-flex px-2 mt-1 mb-4"
-              data-toggle="modal"
-              data-target="#exampleModal"
-            >
-              <div>
-                <FontAwesomeIcon
-                  icon={faUnlock}
-                  style={{
-                    marginRight: "10px",
-                    marginTop: "0px",
-                    cursor: "pointer",
-                  }}
-                />
-              </div>
-              <div className="d-flex flex-column justify-content-center">
-                <h6 className="mb-0 text-sm" style={{ cursor: "pointer" }}>
-                  Security | Change Password
-                </h6>
-              </div>
-            </div>
-            <form action="" onSubmit={handleSubmit}>
-              <div class="modal-body">
-                <div className="row p-0">
-                  <div className="col-12">
-                    <label htmlFor="" className="form-label p-0">
-                      Current Password
-                    </label>
-                    <input
-                      type="password"
-                      name="currentPassword"
-                      onChange={handleChange}
-                      className={
-                        error === true
-                          ? "form-control w-100 is-invalid"
-                          : "form-control w-100"
-                      }
-                      error
-                      required
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <label htmlFor="" className={"form-label p-0"}>
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      name="newPassword"
-                      onChange={handleChange}
-                      className={
-                        confirmError
-                          ? "form-control w-100 is-invalid"
-                          : "form-control w-100"
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <label htmlFor="" className={"form-label p-0"}>
-                      Re-type New Password
-                    </label>
-                    <input
-                      type="password"
-                      name="re_new_password"
-                      onChange={handleChange}
-                      className={
-                        confirmError
-                          ? "form-control w-100 is-invalid"
-                          : "form-control w-100"
-                      }
-                      required
-                    />
-                  </div>
+        </div> */}
+        <div className="container-fluid main-content position-relative">
+          <div className="card mb-4 mt-4 ">
+            <div className="card-body px-0">
+              <div
+                className="d-flex px-2 mt-1 mb-4 px-4 pb-0"
+                data-toggle="modal"
+                data-target="#exampleModal"
+              >
+                <div>
+                  <FontAwesomeIcon
+                    icon={faUnlock}
+                    style={{
+                      marginRight: "10px",
+                      marginTop: "0px",
+                      cursor: "pointer",
+                    }}
+                  />
                 </div>
+                <div className="d-flex flex-column justify-content-center">
+                  <h6 className="mb-0 text-sm" style={{ cursor: "pointer" }}>
+                    Security | Change Password
+                  </h6>
+                </div>
+              </div>
+              <form className="px-3" action="" onSubmit={handleSubmit}>
+                <div class="modal-body">
+                  <div className="row p-0">
+                    <div className="col-12">
+                      <label htmlFor="" className="form-label p-0">
+                        Current Password
+                      </label>
+                      <input
+                        type="password"
+                        name="currentPassword"
+                        onChange={handleChange}
+                        className={
+                          error === true
+                            ? "form-control w-100 is-invalid"
+                            : "form-control w-100"
+                        }
+                        error
+                        required
+                      />
+                    </div>
+                    <div className="col-lg-6">
+                      <label htmlFor="" className={"form-label p-0"}>
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        name="newPassword"
+                        onChange={handleChange}
+                        className={
+                          confirmError
+                            ? "form-control w-100 is-invalid"
+                            : "form-control w-100"
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="col-lg-6">
+                      <label htmlFor="" className={"form-label p-0"}>
+                        Re-type New Password
+                      </label>
+                      <input
+                        type="password"
+                        name="re_new_password"
+                        onChange={handleChange}
+                        className={
+                          confirmError
+                            ? "form-control w-100 is-invalid"
+                            : "form-control w-100"
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
 
-                {confirmError && (
-                  <div className="text-danger">{confirmError}</div>
-                )}
-              </div>
-              <div class="modal-footer mt-3">
-                <button type="submit" className="btn btn-primary">
-                  Save changes
-                </button>
-              </div>
-            </form>
+                  {confirmError && (
+                    <div className="text-danger">{confirmError}</div>
+                  )}
+                </div>
+                <div class="modal-footer mt-3 mb-0">
+                  <button type="submit" className="btn btn-primary m-0">
+                    Save changes
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </main>

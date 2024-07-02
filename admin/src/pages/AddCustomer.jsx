@@ -79,7 +79,7 @@ const AddCustomer = () => {
           swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "Email already exists!",
+            text: err.response.data.message,
             timer: 1000,
           });
         } else {
@@ -101,11 +101,11 @@ const AddCustomer = () => {
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="container-fluid py-4  main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-          <div className="card  card-body blur shadow-blur  p-0 overflow-hidden">
+          {/* <div className="card  card-body blur shadow-blur  p-0 overflow-hidden">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
@@ -147,7 +147,8 @@ const AddCustomer = () => {
                 </div>
               </div>
             </nav>
-          </div>
+          </div> */}
+          
 
           {/* form */}
           <div className="card mb-4 mt-4 pt-3 pb-4">

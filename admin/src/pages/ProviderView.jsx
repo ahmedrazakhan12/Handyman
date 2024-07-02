@@ -84,11 +84,11 @@ const ProviderView = () => {
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main className="main-content position-relative border-radius-lg">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="container-fluid py-4 main-content position-relative border-radius-lg pb-4">
-          <div className="card card-body blur shadow-blur p-0 overflow-hidden">
+          {/* <div className="card card-body blur shadow-blur p-0 overflow-hidden">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
@@ -130,7 +130,7 @@ const ProviderView = () => {
                 </div>
               </div>
             </nav>
-          </div>
+          </div> */}
 
           <div className="card team-details mt-3">
             <div className="card-body">

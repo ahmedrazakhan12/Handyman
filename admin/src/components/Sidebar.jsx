@@ -259,7 +259,7 @@ const Sidebar = () => {
          */}
 
           {/* {profile} */}
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link
               to={"/profile"}
               className={
@@ -311,7 +311,7 @@ const Sidebar = () => {
               </div>
               <span className="nav-link-text ms-1">Profile</span>
             </Link>
-          </li>
+          </li> */}
 
           {/* Add Member */}
 
@@ -503,7 +503,7 @@ const Sidebar = () => {
           </li>
 
           {/* Logout */}
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <div
               className="nav-link"
               onClick={handleLogout}
@@ -548,7 +548,7 @@ const Sidebar = () => {
               </div>
               <span className="nav-link-text ms-1">logout</span>
             </div>
-          </li>
+          </li> */}
         </ul>
       </div>
     </aside>

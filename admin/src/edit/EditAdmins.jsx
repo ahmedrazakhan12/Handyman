@@ -2,20 +2,27 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import Swal from "sweetalert2";
+import swal from "sweetalert2";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import "../App.css";
 import { useNavigate, useParams } from "react-router-dom";
-
+import {
+  CountryDropdown,
+  RegionDropdown,
+  CountryRegionData,
+} from "react-country-region-selector";
 const Editprofile = () => {
   const { id } = useParams();
   const [username, setUsername] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
   const [pfpImage, setPfpImage] = useState(null);
   const [adminData, setAdminData] = useState({});
   const [loginId, setLoginId] = useState(""); // Initialize with null or an appropriate initial value
+  const [country, setCountry] = useState("");
+  const [status, setStatus] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -31,6 +38,10 @@ const Editprofile = () => {
       });
   }, []);
 
+  const [contact, setContact] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [address, setAddress] = useState("");
+
   useEffect(() => {
     if (id) {
       axios
@@ -43,6 +54,11 @@ const Editprofile = () => {
           setUsername(res.data.name);
           setEmail(res.data.email);
           setDescription(res.data.description);
+          setContact(res.data.contact);
+          setPostalCode(res.data.postalCode);
+          setAddress(res.data.address);
+          setCountry(res.data.country);
+          setStatus(res.data.status);
         })
         .catch((err) => {
           console.log(err);
@@ -62,11 +78,26 @@ const Editprofile = () => {
       case "description":
         setDescription(value);
         break;
+      case "contact":
+        setContact(value);
+        break;
+
+      case "postalCode":
+        setPostalCode(value);
+        break;
+      case "address":
+        setAddress(value);
+        break;
+      case "status":
+        setStatus(value);
+        break;
 
       default:
         break;
     }
   };
+
+  console.log("status: ", status);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const handleFileChange = (e) => {
@@ -84,6 +115,11 @@ const Editprofile = () => {
     formData.append("email", email);
     formData.append("description", description);
     formData.append("pfpImage", pfpImage);
+    formData.append("contact", contact);
+    formData.append("country", country);
+    formData.append("postalCode", postalCode);
+    formData.append("address", address);
+    formData.append("status", status);
 
     try {
       const response = await axios.put(
@@ -97,14 +133,24 @@ const Editprofile = () => {
       );
       console.log("Edit-Profile: ", response.data);
       navigate("/team-management");
-    } catch (error) {
-      console.error("Failed to Edit-Profile: ", error);
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.message) {
+        setErrorMessage(err.response.data.message);
+        swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err.response.data.message,
+          timer: 1000,
+        });
+      } else {
+        setErrorMessage("An error occurred. Please try again.");
+      }
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const result = await Swal.fire({
+      const result = await swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -118,7 +164,7 @@ const Editprofile = () => {
         await axios.delete(
           `http://localhost:5000/admin/team/delete/${adminData.id}`
         );
-        Swal.fire({
+        swal.fire({
           title: "Deleted!",
           text: "The admin has been deleted.",
           icon: "success",
@@ -129,9 +175,20 @@ const Editprofile = () => {
       }
     } catch (error) {
       console.error("Failed to delete admin:", error);
-      Swal.fire("Error!", "Failed to delete admin.", "error");
+      swal.fire("Error!", "Failed to delete admin.", "error");
     }
   };
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   // const handleImageDelete = () => {
   //   Swal.fire({
   //     title: "Are you sure?",
@@ -166,16 +223,15 @@ const Editprofile = () => {
   //     }
   //   });
   // };
-  const imageValue = imagePreviewUrl ||
-  adminData.pfpImage ||
-  "../assets/img/no-dp.jpg";
+  const imageValue =
+    imagePreviewUrl || adminData.pfpImage || "../assets/img/no-dp.jpg";
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
 
-      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-        <div className="container d-flex justify-content-between align-items-center w-100 mt-3">
+      <main className="main-content position-relative border-radius-lg">
+        {/* <div className="container d-flex justify-content-between align-items-center w-100 mt-3">
           <div className="card  card-body blur shadow-blur  p-0 overflow-hidden mt-1">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
@@ -219,211 +275,329 @@ const Editprofile = () => {
               </div>
             </nav>
           </div>
-        </div>
-
-        <div className="container-fluid main-content position-relative">
-          <div className="row d-flex justify-content-center align-items-center h-100">
-            <div className="col">
-              <div
-                className="card card-registration my-4"
-                style={{ overflow: "hidden", borderRadius: ".5rem" }}
-              >
-                <form onSubmit={handleSubmit}>
-                  <div className="row g-0">
-                    <div className="col-xl-6" style={{ position: "relative" }}>
-                      <FontAwesomeIcon
-                        icon={faTrash}
+        </div> */}
+        <div className="container-fluid  main-content mb-2 position-relative ">
+          <div className="card mb-4 mt-4 pt-3 pb-2 ">
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+              <div className="container">
+                <div className="row ">
+                  <div className="row m-0">
+                    <div className="col"></div>
+                    <div className="col m-0">
+                      <button
+                        className="btn btn-primary float-end m-0"
+                        onClick={handleDelete}
+                        type="button"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                          style={{
+                            fill: "white",
+                            height: "15px",
+                            width: "17px",
+                            marginBottom: "4px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z" />
+                        </svg>{" "}
+                        Delete User
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="col-lg-3 col-md-12 "
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                      transition: "all 0.3s ease", // Added transition for the container
+                    }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div>
+                      <div
+                        className="hover-overlay img-thumbnail"
                         style={{
-                          fontSize: "24px",
-                          color: "white",
-                          cursor: "pointer",
                           position: "absolute",
-                          top: "3%",
-                          left: "95%",
-                          transform: "translate(-50%, -50%)",
+                          top: 0,
+                          left: 0,
+                          width: "90%",
+                          marginLeft: "5%",
+                          height: "380px",
+                          opacity: isHovered ? 1.8 : 0, // Adjust opacity based on isHovered state
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          transition: "opacity 0.3s ease",
+                          overflow: "hidden", // Added transition for opacity change
+                          // overflow:'hidden'
                         }}
-                        onClick={() => {
-                          if (
-                            imagePreviewUrl === "../assets/img/no-dp.jpg"  || imageValue === "../assets/img/no-dp.jpg"
-                          ) {
-                            Swal.fire(
-                              "Error!",
-                              "Please upload a profile image.",
-                              "error"
-                            );
-                            return;
-                          }
-                          Swal.fire({
-                            title: "Are you sure?",
-                            text: "You are about to delete this item.",
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                          style={{
+                            fill: "white",
+                            height: "25px",
+                            position: "absolute",
+                            top: 10,
+                            left: 125,
+                            width: "90%",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            if (imagePreviewUrl === "../assets/img/no-dp.jpg") {
+                              return swal.fire({
+                                title: "No Profile Picture?",
+                                text: "No image selected.",
+                                icon: "warning",
+                                confirmButtonColor: "#3085d6",
+                              });
+                            }
+                            swal
+                              .fire({
+                                title: "Are you sure?",
+                                text: "Want to remove your profile picture.",
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Yes, reset it!",
+                                cancelButtonText: "Cancel",
+                              })
+                              .then((result) => {
+                                if (result.isConfirmed) {
+                                  // User confirmed, proceed with action
+                                  setPfpImage("null1");
+                                  setImagePreviewUrl("../assets/img/no-dp.jpg");
+                                  swal.fire(
+                                    "Removed!",
+                                    "Your profile picture has been removed.",
+                                    "success"
+                                  );
+                                }
+                              });
+                          }}
+                        >
+                          <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z" />
+                        </svg>
+                        <input
+                          type="file"
+                          style={{
+                            width: "100%",
+                            position: "absolute",
+                            height: "100%",
+                            cursor: "pointer",
+                            marginTop: "80px",
+                            opacity: 0,
+                            // marginLeft:"-500px"
+                          }}
+                          accept="image/png, image/jpeg"
+                          name="pfpImage"
+                          onChange={handleFileChange}
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                          // Adjust opacity based on isHovered state
+                          style={{ width: "10vw", fill: "white" }}
+                        >
+                          <path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z" />
+                        </svg>
+                      </div>
+
+                      <img
+                        src={
+                          imagePreviewUrl ||
+                          adminData.pfpImage ||
+                          "../assets/img/no-dp.jpg"
+                        }
+                        className="form img-thumbnail"
+                        alt="Preview"
+                        style={{
+                          width: "100%",
+                          height: "380px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-lg-9">
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <label htmlFor="">Name</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="username"
+                          value={username}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                      <div className="col-lg-6">
+                        <label htmlFor="">Email</label>
+                        <input
+                          className="form-control"
+                          type="email"
+                          name="email"
+                          value={email}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                      {/* <div className="col-lg-12">
+                        <label htmlFor="">Image</label>
+                        <input
+                          className="form-control"
+                          accept="image/png, image/jpeg"
+                          type="file"
+                          name="pfpImage"
+                          onChange={handleChange}
+                        />
+                      </div> */}
+                      <div className="col-lg-12">
+                        <label htmlFor="">Contact Number</label>
+                        <input
+                          className="form-control"
+                          type="number"
+                          name="contact"
+                          value={contact}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+
+                      <div className="col-lg-12 text-warning">
+                        <label htmlFor="">Description</label>
+                        <textarea
+                          style={{ maxHeight: "200px", minHeight: "200px" }}
+                          className="form-control resizable-none"
+                          id=""
+                          value={description}
+                          name="description"
+                          required
+                          onChange={handleChange}
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-lg-4">
+                    <label htmlFor="">Country</label>
+                    <CountryDropdown
+                      value={country}
+                      onChange={(val) => setCountry(val)}
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="col-lg-4">
+                    <label htmlFor="">Postal / Zip Code </label>
+                    <input
+                      className="form-control"
+                      type="number"
+                      name="postalCode"
+                      value={postalCode}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="col-lg-4">
+                    <label className="form-label" htmlFor="form3Example8">
+                      Role
+                    </label>
+                    <select
+                      // required
+                      className="form-select"
+                      name="status"
+                      onChange={handleChange} // Replace handleChange with your actual handler function
+                    >
+                      <option value="">Select Service Provider Type</option>
+                      <option value="admin">admin</option>
+                    </select>
+                  </div>
+                  <div className="col-lg-12 text-warning">
+                    <label htmlFor="">Address</label>
+                    <textarea
+                      style={{ maxHeight: "150px", minHeight: "150px" }}
+                      className="form-control resizable-none"
+                      id=""
+                      name="address"
+                      required
+                      value={address}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                  {/* <div className="col-lg-6 text-dark">
+                  <label htmlFor="">Password</label>
+                  <input
+                    className="form-control"
+                    type="password"
+                    name="password"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="col-lg-6 text-primary">
+                  <label htmlFor="">Confirm Password</label>
+                  <input
+                    className="form-control"
+                    type="password"
+                    name="confirmPassword"
+                    onChange={handleChange}
+                    required
+                  />
+                </div> */}
+                </div>
+
+                <div className="row mt-4">
+                  <div className="col-lg-12">
+                    {/* {error === true && (
+                      <p className="text-danger text-center">
+                        Passwords doesn't match
+                      </p>
+                    )} */}
+
+                    {errorMessage && (
+                      <p className="text-danger text-center">{errorMessage}</p>
+                    )}
+                    <button className="btn btn-primary w-10 float-end m-0">
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        swal
+                          .fire({
+                            title: "Unsaved Changes",
+                            text: "Are you sure want to discard your changes?.",
                             icon: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#3085d6",
                             cancelButtonColor: "#d33",
-                            confirmButtonText: "Yes, delete it!",
-                          }).then((result) => {
+                            confirmButtonText: "Yes, Unsaved it!",
+                          })
+                          .then((result) => {
                             if (result.isConfirmed) {
-                              setPfpImage("null1");
-                              setImagePreviewUrl("../assets/img/no-dp.jpg");
-                              // Swal.fire(
-                              //   'Deleted!',
-                              //   'Your item has been deleted.',
-                              //   'success'
-                              // );
-                              // Additional logic after confirmation
+                              navigate("/team-management");
                             }
                           });
-                        }}
-                      />
-                      <img
-                        src={
-                          imageValue
-                        }
-                        alt="Sample photo"
-                        className="img-fluid"
-                        style={{
-                          height: "100%",
-                          width: "100%",
-                          objectFit: "cover",
-                          objectPosition: "center",
-                        }}
-                      />
-                    </div>
-                    <div className="col-xl-6">
-                      <div className="card-body text-black">
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="form-outline">
-                              <label
-                                className="form-label"
-                                htmlFor="form3Example1m"
-                              >
-                                Name
-                              </label>
-                              <input
-                                type="text"
-                                id="form3Example1m"
-                                className="form-control form-control-lg"
-                                required
-                                name="username"
-                                value={username}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-6 mb-4">
-                            <div className="form-outline">
-                              <label
-                                className="form-label"
-                                htmlFor="form3Example1n"
-                              >
-                                Email
-                              </label>
-                              <input
-                                type="email"
-                                className="form-control form-control-lg"
-                                required
-                                value={email}
-                                onChange={handleChange}
-                                name="email"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="form-outline mb-4">
-                          <label className="form-label" htmlFor="form3Example8">
-                            Role
-                          </label>
-                          <select
-                            className="form-select"
-                            name="role"
-                            onChange={handleChange}
-                          >
-                            <option value="admin">Admin</option>
-                          </select>
-                        </div>
-
-                        <div className="form-group">
-                          <label className="control-label">Image</label>
-                          <input
-                            type="file"
-                            accept="image/png, image/jpeg"
-                            className="form-control"
-                            name="pfpImage"
-                            onChange={handleFileChange}
-                          />
-                        </div>
-
-                        <div className="form-group">
-                          <label className="control-label">Description</label>
-                          <textarea
-                            className="form-control"
-                            style={{ height: "295px" }}
-                            name="description"
-                            value={
-                              description === "null" ||
-                              description === null ||
-                              description === undefined
-                                ? ""
-                                : description
-                            }
-                            onChange={handleChange}
-                          ></textarea>
-                        </div>
-
-                        <div className="row">
-                          <div className="col">
-                            <button
-                              type="submit"
-                              className="btn btn-primary btn-lg w-100 "
-                            >
-                              Update Admin
-                            </button>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col ">
-                            <button
-                              type="button"
-                              onClick={handleDelete}
-                              className="btn btn-danger btn-lg w-100 "
-                            >
-                              Delete Admin
-                            </button>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col ">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                Swal.fire({
-                                  title: "Unsaved Changes",
-                                  text: "Are you sure want to discard your changes?.",
-                                  icon: "warning",
-                                  showCancelButton: true,
-                                  confirmButtonColor: "#3085d6",
-                                  cancelButtonColor: "#d33",
-                                  confirmButtonText: "Yes, Unsaved it!",
-                                }).then((result) => {
-                                  if (result.isConfirmed) {
-                                    navigate("/team-management");
-                                  }
-                                });
-                              }}
-                              className="btn btn-secondary btn-lg w-100 "
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      }}
+                      className="btn btn-secondary me-2"
+                      style={{ float: "right" }}
+                    >
+                      Cancel
+                    </button>
                   </div>
-                </form>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </main>
@@ -432,3 +606,211 @@ const Editprofile = () => {
 };
 
 export default Editprofile;
+
+{
+  /* <div className="container-fluid main-content position-relative">
+  <div className="row d-flex justify-content-center align-items-center h-100">
+    <div className="col">
+      <div
+        className="card card-registration my-4"
+        style={{ overflow: "hidden", borderRadius: ".5rem" }}
+      >
+        <form onSubmit={handleSubmit}>
+          <div className="row g-0">
+            <div className="col-xl-6" style={{ position: "relative" }}>
+              <FontAwesomeIcon
+                icon={faTrash}
+                style={{
+                  fontSize: "24px",
+                  color: "white",
+                  cursor: "pointer",
+                  position: "absolute",
+                  top: "3%",
+                  left: "95%",
+                  transform: "translate(-50%, -50%)",
+                }}
+                onClick={() => {
+                  if (
+                    imagePreviewUrl === "../assets/img/no-dp.jpg"  || imageValue === "../assets/img/no-dp.jpg"
+                  ) {
+                    Swal.fire(
+                      "Error!",
+                      "Please upload a profile image.",
+                      "error"
+                    );
+                    return;
+                  }
+                  Swal.fire({
+                    title: "Are you sure?",
+                    text: "You are about to delete this item.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      setPfpImage("null1");
+                      setImagePreviewUrl("../assets/img/no-dp.jpg");
+                      // Swal.fire(
+                      //   'Deleted!',
+                      //   'Your item has been deleted.',
+                      //   'success'
+                      // );
+                      // Additional logic after confirmation
+                    }
+                  });
+                }}
+              />
+              <img
+                src={
+                  imageValue
+                }
+                alt="Sample photo"
+                className="img-fluid"
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
+              />
+            </div>
+            <div className="col-xl-6">
+              <div className="card-body text-black">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-outline">
+                      <label
+                        className="form-label"
+                        htmlFor="form3Example1m"
+                      >
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        id="form3Example1m"
+                        className="form-control form-control-lg"
+                        required
+                        name="username"
+                        value={username}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6 mb-4">
+                    <div className="form-outline">
+                      <label
+                        className="form-label"
+                        htmlFor="form3Example1n"
+                      >
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        className="form-control form-control-lg"
+                        required
+                        value={email}
+                        onChange={handleChange}
+                        name="email"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-outline mb-4">
+                  <label className="form-label" htmlFor="form3Example8">
+                    Role
+                  </label>
+                  <select
+                    className="form-select"
+                    name="role"
+                    onChange={handleChange}
+                  >
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="control-label">Image</label>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    className="form-control"
+                    name="pfpImage"
+                    onChange={handleFileChange}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="control-label">Description</label>
+                  <textarea
+                    className="form-control"
+                    style={{ height: "295px" }}
+                    name="description"
+                    value={
+                      description === "null" ||
+                      description === null ||
+                      description === undefined
+                        ? ""
+                        : description
+                    }
+                    onChange={handleChange}
+                  ></textarea>
+                </div>
+
+                <div className="row">
+                  <div className="col">
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-lg w-100 "
+                    >
+                      Update Admin
+                    </button>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col ">
+                    <button
+                      type="button"
+                      onClick={handleDelete}
+                      className="btn btn-danger btn-lg w-100 "
+                    >
+                      Delete Admin
+                    </button>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col ">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        Swal.fire({
+                          title: "Unsaved Changes",
+                          text: "Are you sure want to discard your changes?.",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Yes, Unsaved it!",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            navigate("/team-management");
+                          }
+                        });
+                      }}
+                      className="btn btn-secondary btn-lg w-100 "
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> */
+}

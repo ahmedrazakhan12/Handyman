@@ -19,6 +19,11 @@ const adminModel = sequelize.define(
       unique: true, // Ensure emails are unique
       allowNull: false,
     },
+
+    contact: {
+      type: DataTypes.BIGINT, // Define contact as STRING to store phone numbers
+      allowNull: false,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -32,6 +37,22 @@ const adminModel = sequelize.define(
       allowNull: true,
       // Add length constraint if necessary
     },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    postalCode: {
+      type: DataTypes.BIGINT, // Define contact as STRING to store phone numbers
+      allowNull: false,
+    },
+
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+    
+
     role: {
       type: DataTypes.STRING,
       allowNull: false,

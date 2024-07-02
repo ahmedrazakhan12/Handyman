@@ -61,30 +61,37 @@ const Team = () => {
   // Calculate total number of pages
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
+  const [searchValue, setSearchValue] = useState("");
+  const [seratchResult, setSearchResult] = useState([]);
+  const handleSearchChange = (e) => {
+    const searchTerm = e.target.value;
+    setSearchValue(searchTerm);
+    axios
+      .get(`http://localhost:5000/admin/search/${searchTerm}`)
+      .then((res) => {
+        setData(res.data);
+        console.log("Search Result: ", res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // console.log("Search values: ",searchTerm);
+  };
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="container-fluid py-4  main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-          <div className="card  card-body blur shadow-blur  p-1 overflow-hidden mb-2">
+          {/* <div className="card  card-body blur shadow-blur  p-1 overflow-hidden mb-2">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
               navbar-scroll="true"
             >
-              <div className="container-fluid p-2">
-                <nav aria-label="breadcrumb">
-                  <h6
-                    className="font-weight-bolder mb-0 p-0 "
-                    style={{ fontSize: "20px" }}
-                  >
-                    Team Management
-                  </h6>
-                </nav>
-              </div>
+              <h5>Team</h5>
             </nav>
-          </div>
+          </div> */}
 
           <div className="row">
             <div className="col-12">
@@ -96,7 +103,19 @@ const Team = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <h6>Team Members</h6>
+                  <div className="container-fluid px-0">
+                    <div className="input-group " style={{ width: "20%" , margin:"0 " }}>
+                      <span className="input-group-text text-body">
+                        <i className="fas fa-search" aria-hidden="true" />
+                      </span>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search admins..."
+                        onChange={handleSearchChange}
+                      />
+                    </div>
+                  </div>
                   <Link to="/add-member">
                     <FontAwesomeIcon icon={faUserPlus} />
                   </Link>
@@ -195,7 +214,10 @@ const Team = () => {
                   </div>
                   {/* Pagination */}
                   <Pagination className="justify-content-center mt-3">
-                    <Pagination.Prev onClick={prevPage} disabled={currentPage === 1} />
+                    <Pagination.Prev
+                      onClick={prevPage}
+                      disabled={currentPage === 1}
+                    />
 
                     {[
                       ...Array(Math.ceil(data.length / itemsPerPage)).keys(),
@@ -217,7 +239,10 @@ const Team = () => {
                       </Pagination.Item>
                     ))}
 
-                    <Pagination.Next onClick={nextPage} disabled={currentPage === totalPages} />
+                    <Pagination.Next
+                      onClick={nextPage}
+                      disabled={currentPage === totalPages}
+                    />
                   </Pagination>
                 </div>
               </div>

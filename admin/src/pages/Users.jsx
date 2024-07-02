@@ -70,11 +70,11 @@ const Users = () => {
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <Navbar />
-        <div className="container-fluid py-4 main-content position-relative border-radius-lg ">
-          <div className="card card-body blur shadow-blur p-0 overflow-hidden">
+        {/* <Navbar /> */}
+        <div className="container-fluid  main-content position-relative border-radius-lg ">
+          {/* <div className="card card-body blur shadow-blur p-0 overflow-hidden">
             <div className="row p-2  d-flex justify-content-between">
               <div className="col-6">
                 <h5
@@ -91,7 +91,7 @@ const Users = () => {
                
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Table */}
           <div className="card-body px-0 pt-0 p-2 bg-white mt-4 shadow blur border-radius-lg">

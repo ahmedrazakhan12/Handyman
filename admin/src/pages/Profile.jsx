@@ -38,11 +38,11 @@ const Profile = () => {
   }, [loginId]);
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="container-fluid">
-        <div className="card  card-body blur shadow-blur  p-1 overflow-hidden mb-2">
+        {/* <div className="card  card-body blur shadow-blur  p-1 overflow-hidden mb-2">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
@@ -54,7 +54,7 @@ const Profile = () => {
                 </nav>
               </div>
             </nav>
-          </div>
+          </div> */}
           <div
             className="page-header min-height-300 border-radius-xl mt-4"
             style={{
@@ -66,7 +66,8 @@ const Profile = () => {
           </div>
           <div className="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
             <div className="row gx-4">
-              <div className="col-auto">
+             <div className="col-auto">
+             <Link to={`/admin-data/${loginId}`} style={{ textDecoration: "none" }}>
                 <div className="avatar avatar-xl position-relative">
                   {adminData.pfpImage ? (
                     <img
@@ -87,6 +88,7 @@ const Profile = () => {
                     />
                   )}
                 </div>
+              </Link>
               </div>
               <div className="col-auto my-auto">
                 <div className="h-100">

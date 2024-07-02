@@ -122,6 +122,21 @@ const validateAddress = (address) => {
   }
 };
 
+const validateDescription = (description) => {
+  const minLength = 100;
+  const maxLength = 2500;
+
+  if (!description || description.trim() === "") {
+    return "Description cannot be empty.";
+  }
+  console.log("Description:", description.length);
+  if (description.length < minLength || description.length > maxLength) {
+    return `Description must be between ${minLength} and ${maxLength} characters.`;
+  }
+  
+};
+
+
 const validateEditPassword = (password, confirmPassword) => {
   console.log("Password:", password);
   if (password.length === 0 && confirmPassword.length === 0) {
@@ -218,6 +233,15 @@ const validateCity = (city) => {
 };
 
 
+const validateStatus = (status) => {
+ 
+  if (!status) {
+    return "Status is required.";
+  }
+ 
+};
+
+
 
 module.exports = {
   //   validateAllfields,
@@ -232,4 +256,6 @@ module.exports = {
   validateState,
   validatePostalCode,
   validateCity,
+  validateDescription,
+  validateStatus,
 };

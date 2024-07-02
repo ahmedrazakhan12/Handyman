@@ -9,7 +9,7 @@ import Signin from "./pages/Signin";
 import Protected from "./components/Protected";
 import Editprofile from "./edit/Editprofile";
 import AddMember from "./pages/AddMember";
-
+import Breadcrumb from "./components/Breadcrumb";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SettingProfile from "./edit/SettingProfile";
 import Team from "./pages/Team";
@@ -59,7 +59,10 @@ function App() {
   
   return (
     <div className="App">
-        
+      <Sidebar />
+      <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+      <Navbar />
+      <Breadcrumb />
           <Routes>
             <Route path="/"  element={<Protected Component={Dashboard} />} />
             <Route path="/profile"  element={<Protected Component={Profile} />}  />
@@ -83,7 +86,7 @@ function App() {
             <Route path="/provider/:id" element={<ProviderView />} />
             <Route path="/edit-provider/:id" element={<EditProvider/>} />
           </Routes>
-      
+      </main>
     </div>
   );
 }

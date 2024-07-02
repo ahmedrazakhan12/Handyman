@@ -8,7 +8,7 @@ router.post("/login", adminController.userLogin);
 router.get("/decodedToken", verifyToken, adminController.adminData);
 router.get("/adminInfo", adminController.adminInfo);
 router.put("/editProfile", multer, adminController.editPfp);
-router.post("/register", adminController.register);
+router.post("/register", multer , adminController.register);
 router.put("/changePassword", adminController.changePassword);
 router.get("/team", adminController.team);
 router.get("/team/:id", adminController.teamDataById);

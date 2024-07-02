@@ -15,6 +15,7 @@ const {
   validatePostalCode,
   validateCity,
   validateAddress,
+  validateStatus,
 } = require("../middlewares/Validate");
 
 exports.register = async (req, res) => {
@@ -47,7 +48,7 @@ exports.register = async (req, res) => {
     const postalCodeError = validatePostalCode(postalCode);
     const cityError = validateCity(city);
     const addressError = validateAddress(address);
-
+    const validateStatusError = validateStatus(status);
     if (
       nameError ||
       emailError ||
@@ -58,7 +59,8 @@ exports.register = async (req, res) => {
       stateError ||
       postalCodeError ||
       cityError ||
-      addressError
+      addressError ||
+      validateStatusError
     ) {
       return res.status(400).json({
         status: 400,
@@ -73,7 +75,8 @@ exports.register = async (req, res) => {
           stateError ||
           postalCodeError ||
           cityError ||
-          addressError,
+          addressError ||
+          validateStatusError
       });
     }
 

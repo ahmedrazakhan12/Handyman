@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Breadcrumb } from "react-bootstrap";
 const Dashboard = () => {
   const [adminData, setAdminData] = useState([]);
   useEffect(() => {
@@ -51,11 +52,11 @@ const Dashboard = () => {
   return (
     <>
     
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <Navbar />
+       
         <div className="container-fluid py-4  main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <div className="card  card-body blur shadow-blur  p-1 overflow-hidden mb-3">
+        {/* <div className="card  card-body blur shadow-blur  p-1 overflow-hidden mb-3">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
@@ -67,7 +68,7 @@ const Dashboard = () => {
                 </nav>
               </div>
             </nav>
-          </div>
+          </div> */}
           
           <div className="row">
             <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">

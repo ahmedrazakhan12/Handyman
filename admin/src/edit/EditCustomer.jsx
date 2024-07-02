@@ -196,10 +196,10 @@ const EditCustomer = () => {
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <div className="container-fluid main-content position-relative">
-          <div className="card  card-body blur shadow-blur  p-0 overflow-hidden mt-3">
+          {/* <div className="card  card-body blur shadow-blur  p-0 overflow-hidden mt-3">
             <nav
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
@@ -241,7 +241,7 @@ const EditCustomer = () => {
                 </div>
               </div>
             </nav>
-          </div>
+          </div> */}
 
           <div className="card mb-4 mt-4 pt-3 pb-4">
             <form onSubmit={handleSubmit} encType="multipart/form-data">
